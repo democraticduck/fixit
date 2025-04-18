@@ -19,6 +19,7 @@ from app import views as main_views
 import django.contrib.auth.views
 from django.contrib.auth.views import LoginView, LogoutView
 from datetime import datetime
+from django.views.generic import TemplateView  
 
 from additem import views as additem_views
 
@@ -26,12 +27,16 @@ admin.autodiscover()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('newindex/', main_views.newindex, name='newindex'),
     re_path(r'^$', main_views.home, name='home'),
-    re_path(r'^contact$', main_views.contact, name='contact'),
+    re_path(r'^contact$', main_views.contact, name='contact'), #^ means starts with, $ denotes end of string
     re_path(r'^about$', main_views.about, name='about'),
     re_path(r'^login/$',
-        LoginView.as_view(template_name = 'app/login.html'),
+        main_views.login,
         name='login'),
+    re_path(r'^report/$',
+        LoginView.as_view(template_name = 'app/report.html'),
+        name='report'),
     re_path(r'^logout$',
         LogoutView.as_view(template_name = 'app/index.html'),
         name='logout'),

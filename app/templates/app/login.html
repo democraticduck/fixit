@@ -1,11 +1,15 @@
-{% extends "app/layout.html" %} {% block content %}
-
+{% extends "app/layout.html" %} {% block content %} {% load bootstrap5 %}
 <h2>{{ title }}</h2>
 <div class="row">
   <div class="col-md-8">
     <section id="loginForm">
       <form action="." method="post" class="form-horizontal">
-        {% csrf_token %}
+        {% csrf_token %} {% bootstrap_form form %} {% buttons %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+        {% endbuttons %}
+        <c-input name="shoe_size" placeholder="Show Size" />
+        <c-input name="country" placeholder="Country" />
+        <c-input name="age" placeholder="Age" />
         <h4>Use a local account to log in.</h4>
         <hr />
         <div class="form-group">

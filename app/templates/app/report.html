@@ -1,0 +1,12 @@
+{% extends "app/layout.html" %} {% block content %}
+
+<h2>{{ title }}.</h2>
+
+<div>
+  <form>
+    <input type="text" name="name" placeholder="Name" required />
+    <input type="email" name="email" placeholder="Email" required />
+  </form>
+</div>
+
+{% endblock %}

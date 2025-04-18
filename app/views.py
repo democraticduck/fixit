@@ -7,6 +7,8 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 
+from app.forms import BootstrapAuthenticationForm
+
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
@@ -60,3 +62,36 @@ def menu(request):
     context['user'] = request.user
 
     return render(request,'app/menu.html',context)
+
+def report(request):
+    assert isinstance(request, HttpRequest) #checks if request is an instance of HttpRequest
+    return render(
+        request,
+        'app/report.html',
+        {
+            'title':'Report',
+        }
+    )
+
+def newindex(request):
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/newindex.html',
+        {
+            'title':'New Index',
+        }
+    )
+
+def login(request):
+    """Renders the login page."""
+    assert isinstance(request, HttpRequest)
+    form = BootstrapAuthenticationForm(request, data=request.POST or None)
+    return render(
+        request,
+        'app/login.html',
+        {
+            'title':'Login',
+            'form': form,
+        }
+    )
