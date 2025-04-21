@@ -1,11 +1,135 @@
 {% extends "app/layout.html" %} {% block content %}
 
-<h2>{{ title }}.</h2>
 
-<div>
-  <form>
-    <input type="text" name="name" placeholder="Name" required />
-    <input type="email" name="email" placeholder="Email" required />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Recipe</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f9f9f9;
+      }
+
+      .container1 {
+          max-width: 800px;
+          margin: 120px auto 50px auto; /* Ensure enough spacing from the header */
+          background: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+          text-align: center;
+          margin-bottom: 20px;
+          color: #333;
+      }
+
+      form {
+          display: flex;
+          flex-direction: column;
+      }
+
+      label {
+          font-weight: bold;
+          margin-bottom: 5px;
+          margin-top: 15px;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      textarea,
+      select {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 20px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+      }
+
+      input[type="file"] {
+          margin-bottom: 20px;
+      }
+
+      textarea {
+          resize: vertical;
+          height: 100px;
+      }
+
+      button {
+          background-color: black;
+          color: white;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 1em;
+      }
+
+      button:hover {
+          background-color: #563434;
+      }
+
+      .back-link {
+          display: inline-block;
+          margin-top: 20px;
+          text-decoration: none;
+          color: #DB783B;
+          font-weight: bold;
+      }
+
+      .back-link:hover {
+          color: #563434;
+      }
+
+      .section-title {
+          font-size: 1.2em;
+          color: #DB783B;
+          margin-bottom: 10px;
+      }
+  </style>
+</head>
+
+<div class="container1">
+  <h1>Report an issue</h1>
+  <form action="" method="POST" enctype="multipart/form-data">
+      <!-- Recipe name -->
+      <label for="title">Report Title:</label>
+      <input type="text" id="title" name="name" placeholder="Enter report title..." required>
+
+      <!-- Report Category -->
+      <label for="category">Category:</label>
+      <select id="category" name="category" required>
+          <option value="Vandalism">Vandalism</option>
+          <option value="Broken Infrastructure">Broken Infrastructure</option>
+
+      </select>
+
+      <!-- 
+      
+      Preparation Time
+      <label for="preparation-time">Preparation Time (HH/MM/SS):</label>
+      <input type="text" id="preparation-time" name="preptime" placeholder="00:00:00" required>
+
+      Servings
+      <label for="servings">Servings:</label>
+      <input type="number" id="servings" name="servings" placeholder="Number of servings..." required>
+
+        -->
+
+      <!-- Description -->
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" rows="10" placeholder="List your description here" required></textarea>
+
+      <!-- Report Image -->
+      <label for="image">Image:</label>
+      <input type="file" id="image" name="image" accept="image/*">
+
+      <!-- Submit Button -->
+      <button type="submit">Submit Report</button>
   </form>
 </div>
 
