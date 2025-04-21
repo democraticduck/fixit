@@ -95,3 +95,16 @@ def login(request):
             'form': form,
         }
     )
+
+def signup(request):
+    """Renders the signup page."""
+    assert isinstance(request, HttpRequest)
+    form = BootstrapAuthenticationForm(request, data=request.POST or None)
+    return render(
+        request,
+        'app/signup.html',
+        {
+            'title':'Signup',
+            'form': form,
+        }
+    )

@@ -12,6 +12,18 @@ class BootstrapAuthenticationForm(AuthenticationForm):
                                widget=forms.TextInput({
                                    'class': 'form-control',
                                    'placeholder': 'User name'}))
+    icnumber = forms.CharField(max_length=4,
+                               widget=forms.TextInput({
+                                   'class': 'form-control',
+                                   'placeholder': 'IC Number'}))
+    phonenumber = forms.CharField(max_length=10,
+                               widget=forms.TextInput({
+                                   'class': 'form-control',
+                                   'placeholder': 'Phone Number'}))
+    email = forms.CharField(max_length=254,
+                               widget=forms.TextInput({
+                                   'class': 'form-control',
+                                   'placeholder': 'Email'}))
     password = forms.CharField(label=_("Password"),
                                widget=forms.PasswordInput({
                                    'class': 'form-control',

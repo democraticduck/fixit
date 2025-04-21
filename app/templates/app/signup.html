@@ -4,14 +4,36 @@
   <div class="col-md-8">
     <section id="loginForm">
       
-        <h4>Please enter your IC Number and Password.</h4>
+        <h4>Please enter your personal details.</h4>
         <hr />
         <div class="form-group">
-          <label for="id_username" class="col-md-2 control-label"
+            <label for="id_username" class="col-md-2 control-label"
+              >Username</label
+            >
+            <div class="col-md-10">{{ form.username }}</div>
+          </div>
+
+        <div class="form-group">
+          <label for="id_number" class="col-md-2 control-label"
             >IC Number</label
           >
-          <div class="col-md-10">{{ form.username }}</div>
+          <div class="col-md-10">{{ form.icnumber }}</div>
         </div>
+        
+        <div class="form-group">
+            <label for="id_phonenumber" class="col-md-2 control-label"
+              >Phone Num</label
+            >
+            <div class="col-md-10">{{ form.phonenumber }}</div>
+          </div>
+
+        <div class="form-group">
+            <label for="id_email" class="col-md-2 control-label"
+              >Email</label
+            >
+            <div class="col-md-10">{{ form.email }}</div>
+          </div>
+
         <div class="form-group">
           <label for="id_password" class="col-md-2 control-label"
             >Password</label
@@ -21,7 +43,7 @@
         <div class="form-group">
           <div class="col-md-offset-2 col-md-10">
             <input type="hidden" name="next" value="/menu" />
-            <input type="submit" value="Log in" class="btn btn-default" />
+            <input type="submit" value="Sign up" class="btn btn-default" />
           </div>
         </div>
         {% if form.errors %}
