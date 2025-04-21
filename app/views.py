@@ -3,11 +3,12 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.http import HttpRequest
 from django.template import RequestContext
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 
-from app.forms import BootstrapAuthenticationForm
+from .forms import LoginForm, SignUpForm
 
 def home(request):
     """Renders the home page."""
@@ -86,12 +87,39 @@ def newindex(request):
 def login(request):
     """Renders the login page."""
     assert isinstance(request, HttpRequest)
-    form = BootstrapAuthenticationForm(request, data=request.POST or None)
+    if request.user.is_authenticated:
+        return(redirect('/menu'))
+    
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST) #populate form with data from request.POST
+        if form.is_valid():
+            # Perform login logic here
+            return redirect('/menu')
+    
+    form = SignupForm() #new form instance
     return render(
         request,
         'app/login.html',
         {
             'title':'Login',
-            'form': form,
+            'form': form, #if invalid form, return bound form with errors, else return new form
         }
     )
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            messages.success(request, ('Successfully registered!'))
+            return redirect('home')
+
+    else:
+        form = SignUpForm()
+    context = {'form' : form}
+    return render(request, 'signup.html' , context)
