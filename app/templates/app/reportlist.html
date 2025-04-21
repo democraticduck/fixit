@@ -1,0 +1,28 @@
+{% extends "app/layout.html" %} {% block content %}
+
+<div class="row"> 
+
+    <div class="col-md-10 col-md12 mx-auto mt-t">
+        <h1 class="page-title">Report List</h1>
+
+        <table class="table table-striped">
+            <thread>
+                <tr>
+                    <th scope="col">Report</th>
+                    <th scope="col">Date</th>
+
+                </tr>
+            </thread>
+            <tbody>
+                {% if items|length == 0 %}
+                <tr>
+                    <th scope="row">-</th>
+                    <td>-</td>
+                </tr>
+                {% endif %}
+
+            </tbody>
+        </table>
+    </div> 
+</div>
+{% endblock %}
