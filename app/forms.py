@@ -5,7 +5,7 @@ Definition of forms.
 from django import forms
 
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from .models import User
 
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
@@ -40,45 +40,45 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'ic_num', 'phone_num', 'email', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
 
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
         self.fields['first_name'].widget.attrs['placeholder'] = 'First Name'
-        self.fields['first_name'].label = ''
+        self.fields['first_name'].label = 'First Name'
         self.fields['first_name'].help_text = ''
 
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['placeholder'] = 'Last Name'
-        self.fields['last_name'].label = ''
+        self.fields['last_name'].label = 'Last Name'
         self.fields['last_name'].help_text = ''
-        '''
+        
         self.fields['ic_num'].widget.attrs['class'] = 'form-control'
         self.fields['ic_num'].widget.attrs['placeholder'] = 'IC Number'
-        self.fields['ic_num'].label = ''
-        self.fields['ic_num'].help_text = 'Enter your ic number'
+        self.fields['ic_num'].label = 'IC Address'
+        self.fields['ic_num'].help_text = ''
         #self.fields['ic_num'].validators = [onlyInt, MaxLengthValidator(12)]
-        '''
+        
         self.fields['email'].widget.attrs['class'] = 'form-control'
-        self.fields['email'].label = ''
+        self.fields['email'].label = 'Email Address'
         self.fields['email'].widget.attrs['placeholder'] = 'Email Address'
         self.fields['email'].help_text = ''
-        '''
+        
         self.fields['phone_num'].widget.attrs['class'] = 'form-control'
-        self.fields['phone_num'].label = ''
+        self.fields['phone_num'].label = 'Phone Number'
         self.fields['phone_num'].widget.attrs['placeholder'] = 'Phone Number'
         self.fields['phone_num'].help_text = ''
         #self.fields['phone'].validators = [phoneValidator]
-        '''
+        
 
         self.fields['password1'].widget.attrs['class'] = 'form-control'
-        self.fields['password1'].label = ''
+        self.fields['password1'].label = 'Password'
         self.fields['password1'].widget.attrs['placeholder'] = 'Password'
         self.fields['password1'].help_text = '<ul class="form-text text-muted" small><li>Your password can\'t be too similar to your other personal information.</li><li>Your password must contain at least 8 characters.</li><li>Your password can\'t be a commonly used password.</li><li>Your password can\'t be entirely numeric.</li></ul>'
         
         self.fields['password2'].widget.attrs['class'] = 'form-control'
-        self.fields['password2'].label = ''
+        self.fields['password2'].label = 'Confirm Password'
         self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
         self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</span>'

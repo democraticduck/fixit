@@ -32,7 +32,7 @@ urlpatterns = [
     re_path(r'^contact$', main_views.contact, name='contact'), #^ means starts with, $ denotes end of string
     re_path(r'^about$', main_views.about, name='about'),
     re_path(r'^login/$',
-        main_views.login,
+        main_views.login_user,
         name='login'),
     re_path(r'^signup/$',
         main_views.signup,

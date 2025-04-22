@@ -15,3 +15,10 @@ class Item(models.Model):
     def __str__(self):
         return str(self.item_id)
 
+class User(AbstractUser):
+    ic_num = models.CharField(max_length=12, null=True, blank=True, unique=True)
+    phone_num = models.CharField(max_length=15, null=True, blank=True)
+    username = None
+    USERNAME_FIELD = 'ic_num'
+    REQUIRED_FIELDS = []
+    pass

@@ -5,6 +5,7 @@ from django.http import HttpRequest
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from datetime import datetime
+from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 
@@ -51,8 +52,8 @@ def about(request):
         }
     )
 
-@login_required
 def menu(request):
+    #if user
     check_employee = request.user.groups.filter(name='employee').exists()
 
     context = {
@@ -84,25 +85,37 @@ def newindex(request):
         }
     )
 
-def login(request):
+def onlyInt(val):
+        if not val.isdigit():
+            raise ValidationError('ID contains characters')
+
+def login_user(request):
     """Renders the login page."""
     assert isinstance(request, HttpRequest)
+    ic = request.POST.get('ic_num')
+    password = request.POST.get('password')
     if request.user.is_authenticated:
         return(redirect('/menu'))
-    
     if request.method == 'POST':
-        form = LoginForm(request, data=request.POST) #populate form with data from request.POST
-        if form.is_valid():
-            # Perform login logic here
+        if not ic.isdigit() or password == '':
+            messages.info(request, ('Invalid field(s)')) #add to html
+            return redirect('/login')       
+
+        user = authenticate(request, username=ic, password=password)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, ('Successfully login!'))
             return redirect('/menu')
+
+        messages.success(request, ('Invalid ic or password'))
+        return redirect('/login')
     
-    form = SignupForm() #new form instance
     return render(
         request,
         'app/login.html',
         {
-            'title':'Login',
-            'form': form, #if invalid form, return bound form with errors, else return new form
+            
         }
     )
 
@@ -122,4 +135,4 @@ def signup(request):
     else:
         form = SignUpForm()
     context = {'form' : form}
-    return render(request, 'signup.html' , context)
+    return render(request, 'app/signup.html' , context)
