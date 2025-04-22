@@ -44,7 +44,6 @@ urlpatterns = [
         LogoutView.as_view(template_name = 'app/index.html'),
         name='logout'),
     re_path(r'^menu$', main_views.menu, name='menu'),
-
     re_path(r'^additemform$', additem_views.additemform, name='additem_form'),
     re_path(r'^additemconfirmation$', additem_views.additemconfirmation, name='additem_confirmation'),
 
