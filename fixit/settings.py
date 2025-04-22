@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'additem',
-    'django_bootstrap5',
+    'bootstrap5',
     'django_cotton',
 ]
 
