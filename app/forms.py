@@ -5,7 +5,7 @@ Definition of forms.
 from django import forms
 
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User, Report
 
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
@@ -82,3 +82,18 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].label = 'Confirm Password'
         self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
         self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</span>'
+
+class ReportForm(forms.ModelForm):
+
+    class Meta:
+        model = Report
+        fields = ('title', 'description', 'status', 'category')
+
+    title = forms.CharField(max_length=50, required=True)
+    description = forms.CharField(max_length=500, required=False)
+    category = forms.ChoiceField(choices=Report.CATEGORY.choices, required=True)
+
+    
+        
+
+        
