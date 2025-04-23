@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'additem',
-    'django_bootstrap5',
+    "django_bootstrap5",
+    'bootstrap5',
     'django_cotton',
 ]
 
@@ -103,6 +104,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'app.User'
 
 
 # Internationalization

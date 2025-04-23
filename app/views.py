@@ -3,11 +3,13 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.http import HttpRequest
 from django.template import RequestContext
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from datetime import datetime
+from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 
-from app.forms import BootstrapAuthenticationForm
+from .forms import LoginForm, SignUpForm
 
 def home(request):
     """Renders the home page."""
@@ -50,8 +52,8 @@ def about(request):
         }
     )
 
-@login_required
 def menu(request):
+    #if user
     check_employee = request.user.groups.filter(name='employee').exists()
 
     context = {
@@ -83,41 +85,54 @@ def newindex(request):
         }
     )
 
-def login(request):
+def onlyInt(val):
+        if not val.isdigit():
+            raise ValidationError('ID contains characters')
+
+def login_user(request):
     """Renders the login page."""
     assert isinstance(request, HttpRequest)
-    form = BootstrapAuthenticationForm(request, data=request.POST or None)
+    ic = request.POST.get('ic_num')
+    password = request.POST.get('password')
+    if request.user.is_authenticated:
+        return(redirect('/menu'))
+    if request.method == 'POST':
+        if not ic.isdigit() or password == '':
+            messages.info(request, ('Invalid field(s)')) #add to html
+            return redirect('/login')       
+
+        user = authenticate(request, username=ic, password=password)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, ('Successfully login!'))
+            return redirect('/menu')
+
+        messages.success(request, ('Invalid ic or password'))
+        return redirect('/login')
+    
     return render(
         request,
         'app/login.html',
         {
-            'title':'Login',
-            'form': form,
+            
         }
     )
 
 def signup(request):
-    """Renders the signup page."""
-    assert isinstance(request, HttpRequest)
-    form = BootstrapAuthenticationForm(request, data=request.POST or None)
-    return render(
-        request,
-        'app/signup.html',
-        {
-            'title':'Signup',
-            'form': form,
-        }
-    )
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
 
-def reportlist(request):
-    """Renders the report list page."""
-    assert isinstance(request, HttpRequest)
-    form = BootstrapAuthenticationForm(request, data=request.POST or None)
-    return render(
-        request,
-        'app/reportlist.html',
-        {
-            'title':'Reportlist',
-            'form': form,
-        }
-    )
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            messages.success(request, ('Successfully registered!'))
+            return redirect('home')
+
+    else:
+        form = SignUpForm()
+    context = {'form' : form}
+    return render(request, 'app/signup.html' , context)
