@@ -18,8 +18,17 @@
           <td>-</td>
         </tr>
         {% endif %}
+
+        {% for report in reports %}
+        <tr>
+            <th scope="row">{{report.title}}</th>
+            <td>{{report.date}}</td>
+
+        {% endfor %}
+        </tr>
       </tbody>
     </table>
   </div>
 </div>
+
 {% endblock %}

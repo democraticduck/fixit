@@ -3,6 +3,7 @@ Definition of models.
 """
 
 from django.db import models
+from django.conf import settings
 import uuid
 from django.contrib.auth.models import User, AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -22,7 +23,7 @@ class Report(models.Model):
         INFRASTRUCTURE = 'in', _('Infrastructure')
         OTHER = 'ot', _('Other')
 
-    id = models.(primary_key=True, default = uuid.uuid4, editable = False)
+    id = models.UUIDField(primary_key=True, default = uuid.uuid4, editable = False)
     title = models.TextField(null=False, blank=False, max_length=50)
     description = models.TextField(null=True,default=None, blank=True, max_length=500)
     loc_lng = models.DecimalField(null=False, default=None, blank=False, max_digits=9, decimal_places=6)
@@ -31,7 +32,8 @@ class Report(models.Model):
     category = models.CharField(choices = CATEGORY.choices, default=CATEGORY.OTHER, max_length=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports') #related name for related obj back to current
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports')
+ #related name for related obj back to current
 
 
     def get_status(self) -> STATUS:
@@ -57,3 +59,8 @@ class Photo(models.Model):
 
     def __str__(self):
         return str(self.photo)
+    
+class Item(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    # add any other fields you need
