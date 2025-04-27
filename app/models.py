@@ -3,6 +3,7 @@ Definition of models.
 """
 
 from django.db import models
+from django.contrib.auth.base_user import BaseUserManager
 import uuid
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -41,15 +42,39 @@ class Report(models.Model):
         return self.CATEGORY(self.category)
 
     def __str__(self):
-        return str(self.item_id)
+        return str(self.id)
+
+
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+
+    def create_user(self, ic_num, password=None, **extra_fields):
+        if not ic_num:
+            raise ValueError('The IC number must be set')
+        user = self.model(ic_num=ic_num, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, ic_num, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(ic_num, password, **extra_fields)
 
 class User(AbstractUser):
     ic_num = models.CharField(max_length=12, null=True, blank=True, unique=True)
     phone_num = models.CharField(max_length=15, null=True, blank=True)
-    username = None
+    username = None  # We disable username
     USERNAME_FIELD = 'ic_num'
-    REQUIRED_FIELDS = []
-    pass
+    REQUIRED_FIELDS = []  # No other required fields
+
+    objects = UserManager()  # <-- add this line
 
 class Photo(models.Model):
     photo = models.ImageField(upload_to='photos/')

@@ -20,6 +20,8 @@ import django.contrib.auth.views
 from django.contrib.auth.views import LoginView, LogoutView
 from datetime import datetime
 from django.views.generic import TemplateView  
+from app.views import Reportlist
+
 
 admin.autodiscover()
 
@@ -38,6 +40,8 @@ urlpatterns = [
     re_path(r'^report/$',
         LoginView.as_view(template_name = 'app/report.html'),
         name='report'),
+    re_path(r'reportlist/', Reportlist.as_view(), name='reportlist'),
+
     re_path(r'^logout$',
         LogoutView.as_view(template_name = 'app/index.html'),
         name='logout'),

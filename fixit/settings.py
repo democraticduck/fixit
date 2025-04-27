@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'app',
     'additem',
     "django_bootstrap5",
-    'bootstrap5',
     'django_cotton',
 ]
 
