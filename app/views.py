@@ -6,10 +6,12 @@ from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from datetime import datetime
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, SignUpForm
+
 
 def home(request):
     """Renders the home page."""
@@ -40,6 +42,7 @@ def contact(request):
     )
 
 def about(request):
+
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
     return render(
@@ -52,6 +55,59 @@ def about(request):
         }
     )
 
+class FormFactory:
+    def getForm(type):
+        if type == 'report':
+            logic...
+            return ReportForm(form, randomedate, asdas1)
+        elif type == 'login':
+            logic
+            return LoginForm(asd)
+        elif type=='gay':
+            if not gay:
+                return StraightForm()
+            return GayForm()
+        elif:
+
+        else:
+            raise ValueError("Unknown form type")
+
+into
+
+class FormFactory:
+    @abstractclass
+    def getForm():
+        
+class ReportFormFactoryv1(FormFactory):
+    def getForm():
+        forminput = FormInputv1()
+        font = FontV1()
+        return ReportForm(forminput, font)
+    
+class LoginFormFactory(FormFactory):
+    def getForm():
+        return LoginForm()
+
+class ReportPageView(TemplateView):
+    template_name = "report.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ReportFormFactory.getForm()
+        return context
+
+class FormPageView(TemplateView):
+    form = self.formfact.getForm()
+
+class ReportFormPageView(FormPageView):
+    formfact = ReportFormFactory
+
+class ReportFormView(FormView):
+    template_name = "about.html"
+    form_class = ReportForm
+
+@require_http_methods(["GET"])
+@login_required
 def menu(request):
     #if user
     check_employee = request.user.groups.filter(name='employee').exists()
@@ -64,6 +120,7 @@ def menu(request):
     context['user'] = request.user
 
     return render(request,'app/menu.html',context)
+
 
 def report(request):
     assert isinstance(request, HttpRequest) #checks if request is an instance of HttpRequest
@@ -136,3 +193,9 @@ def signup(request):
         form = SignUpForm()
     context = {'form' : form}
     return render(request, 'app/signup.html' , context)
+
+
+
+
+
+
