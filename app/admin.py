@@ -1,4 +1,4 @@
 from django.contrib import admin
-from app.models import Item
+from .models import Report
 
-admin.site.register(Item)
+admin.site.register(Report)

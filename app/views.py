@@ -6,11 +6,14 @@ from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from datetime import datetime
 from django.contrib import messages
+from django.views import View
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, SignUpForm
+from .models import Report
 
 
 def home(request):
@@ -193,6 +196,11 @@ def signup(request):
         form = SignUpForm()
     context = {'form' : form}
     return render(request, 'app/signup.html' , context)
+
+class Reportlist(View):
+    def get(self, request):
+        reports = Report.objects.all()
+        return render(request, "app/reportlist.html", {"reports": reports})
 
 
 

@@ -1,22 +1,28 @@
-{% extends "app/layout.html" %} {% block content %}
-
+{% extends "app/layout.html" %}
+{% block content %}
 <div class="row">
   <div class="col-md-10 col-md12 mx-auto mt-t">
     <h1 class="page-title">Report List</h1>
 
     <table class="table table-striped">
-      <thread>
-        <tr>
+      <thead>  
           <th scope="col">Report</th>
           <th scope="col">Date</th>
         </tr>
-      </thread>
+      </thead>
       <tbody>
-        {% if items|length == 0 %}
-        <tr>
-          <th scope="row">-</th>
-          <td>-</td>
-        </tr>
+        {% if reports %}
+          {% for report in reports %}
+            <tr>
+              <th scope="row">{{ report.title }}</th>
+              <td>{{ report.created_at }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <th scope="row">-</th>
+            <td>-</td>
+          </tr>
         {% endif %}
       </tbody>
     </table>
