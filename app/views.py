@@ -8,11 +8,13 @@ from datetime import datetime
 from django.contrib import messages
 from django.views import View
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.decorators import login_required
 
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, ReportForm
 from .models import Report
+
 
 def home(request):
     """Renders the home page."""
@@ -43,6 +45,7 @@ def contact(request):
     )
 
 def about(request):
+
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
     return render(
@@ -54,6 +57,7 @@ def about(request):
             'year':datetime.now().year,
         }
     )
+
 
 def menu(request):
     #if user
@@ -68,8 +72,16 @@ def menu(request):
 
     return render(request,'app/menu.html',context)
 
+
 def report(request):
+    print('succeess')
     assert isinstance(request, HttpRequest) #checks if request is an instance of HttpRequest
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print('done')
+    
     return render(
         request,
         'app/report.html',
@@ -144,4 +156,4 @@ class Reportlist(View):
     def get(self, request):
         reports = Report.objects.all()
         return render(request, "app/reportlist.html", {"reports": reports})
-    
+

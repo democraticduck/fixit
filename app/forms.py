@@ -94,6 +94,3 @@ class ReportForm(forms.ModelForm):
     category = forms.ChoiceField(choices=Report.CATEGORY.choices, required=True)
 
     
-        
-
-        
