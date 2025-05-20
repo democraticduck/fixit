@@ -38,7 +38,7 @@ urlpatterns = [
         main_views.signup,
         name='signup'),
     re_path(r'^report/$',
-        LoginView.as_view(template_name = 'app/report.html'),
+        main_views.report,
         name='report'),
     re_path(r'reportlist/', Reportlist.as_view(), name='reportlist'),
 
