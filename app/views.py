@@ -144,3 +144,4 @@ class Reportlist(View):
     def get(self, request):
         reports = Report.objects.all()
         return render(request, "app/reportlist.html", {"reports": reports})
+    

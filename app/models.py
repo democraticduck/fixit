@@ -42,7 +42,7 @@ class Report(models.Model):
         return self.CATEGORY(self.category)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.title)
 
 
 class UserManager(BaseUserManager):

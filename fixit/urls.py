@@ -31,19 +31,10 @@ urlpatterns = [
     re_path(r'^$', main_views.home, name='home'),
     re_path(r'^contact$', main_views.contact, name='contact'), #^ means starts with, $ denotes end of string
     re_path(r'^about$', main_views.about, name='about'),
-    re_path(r'^login/$',
-        main_views.login_user,
-        name='login'),
-    re_path(r'^signup/$',
-        main_views.signup,
-        name='signup'),
-    re_path(r'^report/$',
-        LoginView.as_view(template_name = 'app/report.html'),
-        name='report'),
+    re_path(r'^login/$',main_views.login_user,name='login'),
+    re_path(r'^signup/$',main_views.signup,name='signup'),
+    re_path(r'^report/$',LoginView.as_view(template_name = 'app/report.html'),name='report'),
     re_path(r'reportlist/', Reportlist.as_view(), name='reportlist'),
-
-    re_path(r'^logout$',
-        LogoutView.as_view(template_name = 'app/index.html'),
-        name='logout'),
+    re_path(r'^logout$',LogoutView.as_view(template_name = 'app/index.html'),name='logout'),
     re_path(r'^menu$', main_views.menu, name='menu'),
 ]
