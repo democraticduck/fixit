@@ -1,45 +1,9 @@
-{% extends "app/layout.html" %} {% block content %} {% load django_bootstrap5 %}
-<h2>{{ title }}</h2>
-<div class="row">
-  <div class="col-md-8">
-    {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-      <li class="{{ message.tags }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    <section id="loginForm">
-      <form method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="Enter IC Number"
-            ,
-            name="ic_num"
-          />
-        </div>
-        <div class="form-group">
-          <input
-            type="password"
-            class="form-control"
-            placeholder="Enter Password"
-            ,
-            name="password"
-          />
-        </div>
-        <button type="submit" class="btn btn-secondary">Submit</button>
-      </form>
-    </section>
-  </div>
-  <div class="col-md-4">
-    <section id="socialLoginForm"></section>
-  </div>
-</div>
+{% extends "app/layout.html" %} {% load django_bootstrap5 %} {% block title %}
+Login {% endblock %} {% block content %}
 
-{% endblock %} {% block scripts %} {% load static %}
-<script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
+<form method="POST" action="{% url 'login' %}">
+  {% csrf_token %} {% bootstrap_form form layout=layout size=size %} {%
+  bootstrap_button button_type="submit" content="OK" %}
+</form>
 
 {% endblock %}

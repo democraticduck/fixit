@@ -33,8 +33,11 @@ class Report(models.Model):
     category = models.CharField(choices = CATEGORY.choices, default=CATEGORY.OTHER, max_length=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    photo_url = models.TextField(null=True, blank=True)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports') #related name for related obj back to current
-
+    
+    
+    
     def get_status(self) -> STATUS:
         return self.STATUS(self.status)
 
@@ -70,15 +73,10 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     ic_num = models.CharField(max_length=12, null=True, blank=True, unique=True)
     phone_num = models.CharField(max_length=15, null=True, blank=True)
+
     username = None  # We disable username
     USERNAME_FIELD = 'ic_num'
     REQUIRED_FIELDS = []  # No other required fields
 
     objects = UserManager()  # <-- add this line
 
-class Photo(models.Model):
-    photo = models.ImageField(upload_to='photos/')
-    report_id = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='photos')
-
-    def __str__(self):
-        return str(self.photo)

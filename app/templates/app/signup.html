@@ -1,36 +1,8 @@
-{% extends "app/layout.html" %} {% block content %} {% load django_bootstrap5 %}
-<h2>{{ title }}</h2>
-<div class="row">
-  <div class="col-md-8">
-    <section id="loginForm">
-      
-        <h4>Please enter your personal details.</h4>
-        <hr />
-        <form method="post" action="{% url 'signup' %}">
-          {% csrf_token %}
-          {% if form.errors %}
-            <div class="alert {{ message.tags }} alert-warning alert-dismissable" role="alert">
-                <button class="close" data-dismiss="alert" aria-label="Close" aria-hidden="true">&times;</button></button>
-                <p>Your form has errors.</p>
-                {% for field in form %}
-                    {% if field.errors %}
-                        {{ field.errors }}
-                    {% endif %}
-                {% endfor %}
-            </div>        
-        {% endif %}
-          {{form}}
-          <button type="submit" class="btn btn-secondary">Signup</button>
-        </form>
-        
-    </section>
-  </div>
-  <div class="col-md-4">
-    <section id="socialLoginForm"></section>
-  </div>
-</div>
-
-{% endblock %} {% block scripts %} {% load static %}
-<script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
+{% extends "app/layout.html" %} {% load django_bootstrap5 %} {% block title %}
+Signup {% endblock %} {% block content %}
+<form method="POST" action="{% url 'signup' %}">
+  {% csrf_token %} {% bootstrap_form form layout=layout size=size %} {%
+  bootstrap_button button_type="submit" content="OK" %}
+</form>
 
 {% endblock %}

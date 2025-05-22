@@ -11,10 +11,10 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.decorators import login_required
-
+import shortuuid
 from .forms import LoginForm, SignUpForm, ReportForm
 from .models import Report
-
+from django.conf import settings
 
 def home(request):
     """Renders the home page."""
@@ -72,21 +72,44 @@ def menu(request):
 
     return render(request,'app/menu.html',context)
 
+def handle_upload(f, dir_path, name):
+    import pathlib
+    pathlib.Path(dir_path).mkdir(parents=True, exist_ok=True) 
+    path = dir_path + "/" + name
+    with open(path, "wb+") as destination:
+        print('path is ' , path)
+        for chunk in f.chunks():
+            destination.write(chunk)
+    
+    print('success')
 
 def report(request):
-    print('succeess')
     assert isinstance(request, HttpRequest) #checks if request is an instance of HttpRequest
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
-            form.save()
-            print('done')
+            dir_name = shortuuid.uuid() #generate uuid for folder in media
+            dir_path = str(settings.MEDIA_ROOT) + "/" + dir_name
+
+            for value in request:
+                print(value)
+
+            for idx, f in enumerate(request.FILES.getlist("photo")):
+                handle_upload(f, dir_path, str(f.name))
+                
+
+            obj = form.save(commit=False)
+            obj.user_id = request.user 
+            obj.photo_url = dir_path
+            obj.save()
+            
     
     return render(
         request,
         'app/report.html',
         {
             'title':'Report',
+            'form': ReportForm()
         }
     )
 
@@ -107,8 +130,10 @@ def onlyInt(val):
 def login_user(request):
     """Renders the login page."""
     assert isinstance(request, HttpRequest)
+    
     ic = request.POST.get('ic_num')
     password = request.POST.get('password')
+    print(ic)
     if request.user.is_authenticated:
         return(redirect('/menu'))
     if request.method == 'POST':
@@ -130,7 +155,7 @@ def login_user(request):
         request,
         'app/login.html',
         {
-            
+            'form': LoginForm()
         }
     )
 
@@ -139,7 +164,7 @@ def signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data['username']
+            username = form.cleaned_data['ic_num']
             password = form.cleaned_data['password1']
 
             user = authenticate(username=username, password=password)
