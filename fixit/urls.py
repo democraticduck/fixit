@@ -39,7 +39,7 @@ urlpatterns = [
         main_views.signup,
         name='signup'),
     re_path(r'^report/$',
-        LoginView.as_view(template_name = 'app/report.html'),
+        main_views.report,
         name='report'),
     re_path(r'reportlist/', Reportlist.as_view(), name='reportlist'),
     re_path(r'detail/', ReportDetail.as_view(), name='reportdetail'),
@@ -47,4 +47,4 @@ urlpatterns = [
         LogoutView.as_view(template_name = 'app/index.html'),
         name='logout'),
     re_path(r'^menu$', main_views.menu, name='menu'),
-] + static(settings.STATIC_URL)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -10,7 +10,6 @@ from django.views import View
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-from django.contrib.auth.decorators import login_required
 import shortuuid
 from .forms import LoginForm, SignUpForm, ReportForm
 from .models import Report
@@ -103,7 +102,7 @@ def report(request):
             obj.loc_lat = request.POST.get('loc_lat')
             obj.loc_lng = request.POST.get('loc_lng')
             obj.user_id = request.user 
-            obj.photo_url = dir_path
+            obj.photo_url = dir_name #save as name of dir
             obj.save()
             messages.success(request, ('Success!'))
             return redirect('/reportlist')
@@ -197,8 +196,22 @@ class ReportDetail(View):
         id = request.GET.get('id')
         
         reports = Report.objects.filter(id=id).values()
+        report = list(reports)[0]
+        #import re
+        import os
+        #idWoDashes = re.sub(r"-", "", id) 
+        img_name = os.listdir(str(settings.MEDIA_ROOT) + "/" + report['photo_url'])
+        img_path_list = [settings.MEDIA_URL + report['photo_url'] + "/" + name for name in img_name]
         
-        return render(request, "app/reportdetail.html", {"reports": list(reports)[0]})
+        return render(request, "app/reportdetail.html", {"report": report, "img_path_list": img_path_list, "fields": {
+            "ID": report['id'],
+            "Title": report['title'],
+            "Description": report['description'],
+            "Status": Report.STATUS(report['status']).label,
+            "Category": Report.CATEGORY(report['category']).label,
+            "Created at": report['created_at'],
+        }
+        })
 
 
 
