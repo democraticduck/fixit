@@ -39,7 +39,7 @@ urlpatterns = [
         main_views.signup,
         name='signup'),
     re_path(r'^report/$',
-        main_views.report,
+        LoginView.as_view(template_name = 'app/report.html'),
         name='report'),
     re_path(r'reportlist/', Reportlist.as_view(), name='reportlist'),
     re_path(r'detail/', ReportDetail.as_view(), name='reportdetail'),
