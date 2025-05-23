@@ -1,6 +1,5 @@
 {% extends "app/layout.html" %} {% load django_bootstrap5 %} {% block title %}
-Report an issue {% endblock %} {% block content %}
-
+Report an issue {% endblock %} {% block content %} 
 <form
   action=""
   method="POST"
@@ -8,8 +7,38 @@ Report an issue {% endblock %} {% block content %}
   enctype="multipart/form-data"
 >
   <!-- Recipe name -->
-  {% csrf_token %} {% bootstrap_form form layout=layout size=size %} {%
-  bootstrap_button button_type="submit" content="OK" %}
+  {% csrf_token %} {% bootstrap_form form layout=layout size=size %}
+  <input type="hidden" name="loc_lat" id="loc_lat"></input>
+  <input type="hidden" name="loc_lng" id="loc_lng"></input>
+  <button type="button" id="locBtn">Get location</button>
+  <button class="btn-primary" type="submit" id="submitBtn" disabled>Submit</button>
 </form>
 
-{% endblock %}
+
+
+<script>
+  const btn = document.getElementById("locBtn");
+  const submitBtn = document.getElementById("submitBtn");
+  const lat = document.getElementById("loc_lat");
+  const lng = document.getElementById("loc_lng");
+
+  btn.addEventListener("click", function () {
+    btn.innerText = 'Loading...';
+    navigator.geolocation.getCurrentPosition(success, error);
+  });
+
+  function success(pos) {
+    console.log(pos);
+    lat.value = pos.coords.latitude;
+    lng.value = pos.coords.longitude;
+    submitBtn.disabled = false;
+    console.log(pos.coords.latitude, " ", pos.coords.longitude);
+    btn.innerText = 'Get location';
+  }
+
+  function error() {
+    alert("Sorry, no position available.");
+    btn.innerText = 'Get location';
+  }
+</script>
+ {% endblock %}

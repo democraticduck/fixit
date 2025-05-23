@@ -1,4 +1,5 @@
 {% extends "app/layout.html" %}
+{% load django_bootstrap5 %}
 {% block content %}
 <div class="row">
   <div class="col-md-10 col-md12 mx-auto mt-t">
@@ -13,8 +14,8 @@
       <tbody>
         {% if reports %}
           {% for report in reports %}
-            <tr>
-              <th scope="row">{{ report.title }}</th>
+            <tr style="transform: rotate(0);"> <!--create new stacking context-->
+              <th scope="row"><a href="/detail?id={{report.id}}" class="stretched-link">{{ report.title }}</a></th>
               <td>{{ report.created_at }}</td>
             </tr>
           {% endfor %}

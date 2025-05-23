@@ -83,6 +83,7 @@ def handle_upload(f, dir_path, name):
     
     print('success')
 
+@login_required(login_url='/login')
 def report(request):
     assert isinstance(request, HttpRequest) #checks if request is an instance of HttpRequest
     if request.method == 'POST':
@@ -97,12 +98,19 @@ def report(request):
             for idx, f in enumerate(request.FILES.getlist("photo")):
                 handle_upload(f, dir_path, str(f.name))
                 
-
+            
             obj = form.save(commit=False)
+            obj.loc_lat = request.POST.get('loc_lat')
+            obj.loc_lng = request.POST.get('loc_lng')
             obj.user_id = request.user 
             obj.photo_url = dir_path
             obj.save()
-            
+            messages.success(request, ('Success!'))
+            return redirect('/reportlist')
+        
+        else:
+            messages.success(request, ('Please fill in required fields'))
+            return redirect('/report')
     
     return render(
         request,
@@ -180,8 +188,17 @@ def signup(request):
 class Reportlist(View):
     def get(self, request):
         reports = Report.objects.all()
+        
         return render(request, "app/reportlist.html", {"reports": reports})
 
+
+class ReportDetail(View):
+    def get(self, request):
+        id = request.GET.get('id')
+        
+        reports = Report.objects.filter(id=id).values()
+        
+        return render(request, "app/reportdetail.html", {"reports": list(reports)[0]})
 
 
 

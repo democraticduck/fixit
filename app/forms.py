@@ -125,7 +125,7 @@ class ReportForm(forms.ModelForm):
 
     class Meta:
         model = Report
-        fields = ['title', 'description', 'status', 'category', 'loc_lng', 'loc_lat', 'photo', 'city', 'location']
+        fields = ['title', 'description', 'status', 'category', 'photo']
     
     def __init__(self, *args, **kwargs):
         super(ReportForm, self).__init__(*args, **kwargs)
