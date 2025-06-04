@@ -35,9 +35,8 @@ class Report(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     photo_url = models.TextField(null=True, blank=True)
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports') #related name for related obj back to current
-    
-    
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='submitted_reports') #related name for related obj back to current
+    manage_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='managed_reports')
     
     def get_status(self) -> STATUS:
         return self.STATUS(self.status)
@@ -52,7 +51,6 @@ class Report(models.Model):
     def days_since_creation(self):
         diff = timezone.now() - self.created_at
         return diff.days
-
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -86,3 +84,14 @@ class User(AbstractUser):
 
     objects = UserManager()  # <-- add this line
 
+class Notification(models.Model):
+    id = models.UUIDField(primary_key=True, default = uuid.uuid4, editable = False)
+    description = description = models.TextField(null=True,default=None, blank=True, max_length=200)
+    sent_at = models.DateTimeField()
+    report_id = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='notification')
+
+    def get_report_title(self):
+        return self.report_id.title
+    
+    def __str__(self):
+        return str(self.id)

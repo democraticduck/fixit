@@ -1,0 +1,32 @@
+<li class="nav-item">
+  <a href="" class="nav-link" data-bs-toggle="modal" data-bs-target="#notificationModal">Notification</a>
+<li class="nav-item">
+
+<!-- Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Notification</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% if notifications %}
+          {% for notification in notifications %}
+            <h5><a href="/detail?id={{ notification.report_id.id }}">{{ notification.get_report_title }}</a></h5>
+            <p>{{ notification.description }}</p>
+            <style>.right {text-align: right;}</style>
+            <p class="right"><small>{{ notification.sent_at }}</small></p>
+            <hr>
+          {% endfor %}
+        {% else %}
+          <style>.center {text-align: center;}</style>
+          <p class="center">NO NOTIFICATIONS</p>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

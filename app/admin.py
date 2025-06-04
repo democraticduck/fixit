@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Report
+from .models import Report, Notification
 from .models import User
 from django.utils import timezone
 
@@ -22,3 +22,4 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(Report, ReportAdmin)
 admin.site.register(User, UserAdmin)
+admin.site.register(Notification)

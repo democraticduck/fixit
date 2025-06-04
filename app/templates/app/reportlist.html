@@ -13,7 +13,7 @@
       </thead>
       <tbody>
         {% if reports %}
-          {% for report in reports %}
+          {% for report in user.submitted_reports.all %}
             <tr style="transform: rotate(0);"> <!--create new stacking context-->
               <th scope="row"><a href="/detail?id={{report.id}}" class="stretched-link">{{ report.title }}</a></th>
               <td>{{ report.created_at }}</td>
