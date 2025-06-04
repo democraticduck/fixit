@@ -25,6 +25,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 admin.autodiscover()
 
+admin.site.site_header = "Fixit Admin"
 urlpatterns = [
     
     path('admin/', admin.site.urls),

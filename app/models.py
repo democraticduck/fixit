@@ -8,6 +8,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 #sharing entity
 
@@ -46,6 +47,11 @@ class Report(models.Model):
 
     def __str__(self):
         return str(self.title)
+    
+    @property
+    def days_since_creation(self):
+        diff = timezone.now() - self.created_at
+        return diff.days
 
 
 class UserManager(BaseUserManager):
