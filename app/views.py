@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.views import View
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseBadRequest, HttpResponseNotFound
 
 import shortuuid
 from .forms import LoginForm, SignUpForm, ReportForm
@@ -213,7 +214,61 @@ class ReportDetail(View):
         }
         })
 
+def coordinator_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            ic = form.cleaned_data['ic_num']
+            pwd = form.cleaned_data['password']
+            user = authenticate(request, ic_num=ic, password=pwd)
+            if user:
+                login(request, user)
+                return redirect('view_reports')
+    else:
+        form = LoginForm()
+    return render(request, 'app/coordinator_login.html', {'form': form})
 
+def coordinator_register(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('coordinator_login')
+    else:
+        form = SignUpForm()
+    return render(request, 'app/coordinator_register.html', {'form': form})
+
+@login_required
+def coordinator_view_reports(request):
+        reports = Report.objects.all()
+        
+        return render(request, "app/coordinator_view_reports.html", {"reports": reports})
+
+@login_required
+def coordinator_update_status(request, report_id):
+    reports = Report.objects.filter(id=report_id).values()
+    if not reports:
+        return HttpResponseNotFound("Report not found.")
+
+    report = list(reports)[0]
+
+    import os
+    img_path = os.path.join(settings.MEDIA_ROOT, report['photo_url'])
+    img_name = os.listdir(img_path) if os.path.exists(img_path) else []
+    img_path_list = [settings.MEDIA_URL + report['photo_url'] + "/" + name for name in img_name]
+
+    return render(request, "app/coordinator_update_status.html", {
+        "report": report,
+        "img_path_list": img_path_list,
+        "fields": {
+            "ID": report['id'],
+            "Title": report['title'],
+            "Description": report['description'],
+            "Status": Report.STATUS(report['status']).label,
+            "Category": Report.CATEGORY(report['category']).label,
+            "Created at": report['created_at'],
+        }
+    })
 
 
 
