@@ -101,7 +101,7 @@ def report(request):
             obj = form.save(commit=False)
             obj.loc_lat = request.POST.get('loc_lat')
             obj.loc_lng = request.POST.get('loc_lng')
-            obj.user_id = request.user 
+            obj.user_id = request.user
             obj.photo_url = dir_name #save as name of dir
             obj.save()
             messages.success(request, ('Success!'))
@@ -186,7 +186,7 @@ def signup(request):
 
 class Reportlist(View):
     def get(self, request):
-        reports = Report.objects.all()
+        reports = Report.objects.filter(user_id=request.user)
         
         return render(request, "app/reportlist.html", {"reports": reports})
 

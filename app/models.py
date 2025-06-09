@@ -34,8 +34,9 @@ class Report(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     photo_url = models.TextField(null=True, blank=True)
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports') #related name for related obj back to current
-    
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='report') #related name for related obj back to current
+    validated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='report')
+    validated_at = models.ForeignKey
     
     
     def get_status(self) -> STATUS:
@@ -80,3 +81,8 @@ class User(AbstractUser):
 
     objects = UserManager()  # <-- add this line
 
+class Admin(User):
+    work_id = models.CharField(max_length = 255, blank=False)
+
+class Coordinator(User):
+    work_id = models.CharField(max_length = 255, blank=False)
