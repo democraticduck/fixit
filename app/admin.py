@@ -4,11 +4,11 @@ from .models import User
 from django.utils import timezone
 
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'status', 'created_at', 'days_since_creation')
-    list_filter = ('status', 'category', )
+    list_display = ('title', 'category', 'approve_status', 'created_at', 'days_since_creation')
+    list_filter = ('approve_status', 'category', )
     search_fields = ('title', )
 
-    fields = ('title', 'description', 'loc_lng', 'loc_lat', 'status', 'category', 'photo_url', 'user_id',)
+    fields = ('title', 'description', 'loc_lng', 'loc_lat', 'approve_status', 'case_status', 'category', 'photo_url', 'user_id',)
 
     readonly_fields = ('title', 'description', 'loc_lng', 'loc_lat', 'category', 'photo_url', 'user_id',)
     @property
