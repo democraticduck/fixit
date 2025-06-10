@@ -13,10 +13,13 @@ from django.utils import timezone
 #sharing entity
 
 class Report(models.Model):
-    class STATUS(models.TextChoices):
-        OPEN = 'op', _('Open')
+    class CASE_STATUS(models.TextChoices):
+        PENDING = 'pe', _('Pending')
         IN_PROGRESS = 'ip', _('In Progress')
         CLOSED = 'cl', _('Closed')
+
+    class APPROVE_STATUS(models.TextChoices):
+        APPROVED = 'ap', _('Approved')
         REJECTED = 'rj', _('Rejected')
 
     class CATEGORY(models.TextChoices):
@@ -30,16 +33,15 @@ class Report(models.Model):
     description = models.TextField(null=True,default=None, blank=True, max_length=500)
     loc_lng = models.DecimalField(null=False, default=None, blank=False, max_digits=9, decimal_places=6)
     loc_lat = models.DecimalField(null=False, default=None, blank=False, max_digits=9, decimal_places=6)
-    status = models.CharField(choices = STATUS.choices, default=STATUS.OPEN, max_length=2)
+    approve_status = models.CharField(choices = APPROVE_STATUS.choices, default=APPROVE_STATUS.REJECTED, max_length=2)
+    case_status = models.CharField(choices = CASE_STATUS.choices, default=CASE_STATUS.PENDING, max_length=2)
+    status_detail = models.TextField(null=False, blank=False, max_length=500)
     category = models.CharField(choices = CATEGORY.choices, default=CATEGORY.OTHER, max_length=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     photo_url = models.TextField(null=True, blank=True)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='submitted_reports') #related name for related obj back to current
     manage_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='managed_reports')
-    
-    def get_status(self) -> STATUS:
-        return self.STATUS(self.status)
 
     def get_category(self) -> CATEGORY:
         return self.CATEGORY(self.category)
