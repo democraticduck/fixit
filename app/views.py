@@ -167,6 +167,28 @@ def login_user(request):
         }
     )
 
+def signupFact(role):
+    def signup(request):
+        if request.method == 'POST':
+            form = SignUpForm(request.POST)
+            form.role = role
+            if form.is_valid():
+                form.save()
+                username = form.cleaned_data['ic_num']
+                password = form.cleaned_data['password1']
+
+                user = authenticate(username=username, password=password)
+                login(request, user)
+                messages.success(request, ('Successfully registered!'))
+                return redirect('home')
+
+        else:
+            form = SignUpForm()
+        context = {'form' : form}
+        return render(request, 'app/signup.html' , context)
+
+    return signup
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -184,6 +206,7 @@ def signup(request):
         form = SignUpForm()
     context = {'form' : form}
     return render(request, 'app/signup.html' , context)
+
 
 class Reportlist(View):
     def get(self, request):
