@@ -77,7 +77,7 @@ class UserManager(BaseUserManager):
         return self.create_user(ic_num, password, **extra_fields)
 
 class User(AbstractUser):
-     class USER_ROLE(models.TextChoices):
+    class USER_ROLE(models.TextChoices):
         ADMIN = 'ad', _('Admin')
         COORDINATOR = 'co', _('Coordinator')
         CUSTOMER = 'cu', _('Customer')
@@ -93,7 +93,6 @@ class User(AbstractUser):
     objects = UserManager()  # <-- add this line
 
 class Admin(User):
-    self.role = 
     work_id = models.CharField(max_length = 255, blank=False)
 
 class Coordinator(User):
