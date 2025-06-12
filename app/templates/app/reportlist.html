@@ -1,21 +1,24 @@
 {% extends "app/layout.html" %}
 {% load django_bootstrap5 %}
 {% block content %}
+
 <div class="row">
   <div class="col-md-10 col-md12 mx-auto mt-t">
     <h1 class="page-title">Report List</h1>
 
     <table class="table table-striped">
-      <thead>  
+      <thead>
+        <tr>
           <th scope="col">Report</th>
           <th scope="col">Date</th>
         </tr>
       </thead>
+
       <tbody>
         {% if reports %}
           {% for report in user.submitted_reports.all %}
-            <tr style="transform: rotate(0);"> <!--create new stacking context-->
-              <th scope="row"><a href="/detail?id={{report.id}}" class="stretched-link">{{ report.title }}</a></th>
+            <tr style="transform: rotate(0)"> <!--create new stacking context-->
+              <th scope="row"><a href="/detail?id={{ report.id }}" class="stretched-link">{{ report.title }}</a></th>
               <td>{{ report.created_at }}</td>
             </tr>
           {% endfor %}
@@ -29,4 +32,5 @@
     </table>
   </div>
 </div>
+
 {% endblock %}

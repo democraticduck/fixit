@@ -28,38 +28,31 @@
             aria-label="Close"
           ></button>
         </div>
+
         <div class="modal-body">
-          {% if notifications %} {% for notification in notifications %}
-          <h5>
-            <a href="/detail?id={{ notification.report_id.id }}"
-              >{{ notification.get_report_title }}</a
-            >
-          </h5>
-          <p>{{ notification.description }}</p>
-          <style>
-            .right {
-              text-align: right;
-            }
-          </style>
-          <p class="right"><small>{{ notification.sent_at }}</small></p>
-          <hr />
-          {% endfor %} {% else %}
-          <style>
-            .center {
-              text-align: center;
-            }
-          </style>
-          <p class="center">NO NOTIFICATIONS</p>
+          {% if notifications %}
+            {% for notification in notifications %}
+              <h5>
+                <a href="/detail?id={{ notification.report_id.id }}"
+                  >{{ notification.get_report_title }}</a
+                >
+              </h5>
+              <p>{{ notification.description }}</p>
+              <p style="text-align: right"><small>{{ notification.sent_at }}</small></p>
+              <hr />
+            {% endfor %}
+          {% else %}
+            <p style="text-align: center">NO NOTIFICATIONS</p>
           {% endif %}
         </div>
+
         <div class="modal-footer">
           <button
             type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
+            >Close</button
           >
-            Close
-          </button>
         </div>
       </div>
     </div>
