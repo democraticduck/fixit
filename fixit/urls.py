@@ -13,27 +13,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, re_path
 from app import views as main_views
-import django.contrib.auth.views
-from django.contrib.auth.views import LoginView, LogoutView
-from datetime import datetime
-from django.views.generic import TemplateView  
 from app.views import Reportlist, ReportDetail
-from django.conf.urls.static import static
 from django.conf import settings
-admin.autodiscover()
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.auth.views import LogoutView
+from django.urls import path, re_path
 
+admin.autodiscover()
 admin.site.site_header = "Fixit Admin"
+
 urlpatterns = [
-    
     path('admin/', admin.site.urls),
     path('newindex/', main_views.newindex, name='newindex'),
     re_path(r'^$', main_views.home, name='home'),
     re_path(r'^contact$', main_views.contact, name='contact'), #^ means starts with, $ denotes end of string
     re_path(r'^about$', main_views.about, name='about'),
-    re_path(r'^login/$',
+    path('login/',
         main_views.login_user,
         name='login'),
     re_path(r'^signup/$',
@@ -42,14 +39,14 @@ urlpatterns = [
     re_path(r'^report/$',
         main_views.report,
         name='report'),
-    re_path(r'reportlist/', Reportlist.as_view(), name='reportlist'),
-    re_path(r'detail/', ReportDetail.as_view(), name='reportdetail'),
+    path(r'reportlist/', Reportlist.as_view(), name='reportlist'),
+    path(r'detail/', ReportDetail.as_view(), name='reportdetail'),
     re_path(r'^logout$',
         LogoutView.as_view(template_name = 'app/index.html'),
         name='logout'),
     re_path(r'^menu$', main_views.menu, name='menu'),
-    path('coordinator/login/', main_views.coordinator_login, name='coordinator_login'),
-    path('coordinator/register/', main_views.coordinator_register, name='coordinator_register'),
-    path('coordinator/reportlist/', main_views.coordinator_view_reports, name='view_reports'),
-    path('coordinator/report/<uuid:report_id>/update/', main_views.coordinator_update_status, name='update_status'),
+    path('coordinator/menu/', main_views.coordinator_menu, name='coordinator_menu'),
+    path('coordinator/signup/', main_views.coordinator_signup, name='coordinator_signup'),
+    path('coordinator/reportlist/', main_views.coordinator_reportlist, name='coordinator_reportlist'),
+    path('coordinator/reportdetail/', main_views.coordinator_reportdetail, name='coordinator_reportdetail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
