@@ -56,7 +56,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'ic_num', 'phone_num', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'ic_num', 'phone_num', 'email', 'password1', 'password2', 'role']
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
@@ -98,6 +98,8 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].label = 'Confirm Password'
         self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
         self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</span>'
+
+        self.fields['role'].widget = forms.HiddenInput()
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -152,3 +154,15 @@ class ReportForm(forms.ModelForm):
     loc_lat = forms.DecimalField(required=True)
     
     """
+
+class ReportUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ['case_status', 'progress_detail']
+        widgets = {
+            'case_status': forms.Select(attrs={'class': 'form-select'}),
+            'progress_detail': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter progress update…'
+            }),
+        }

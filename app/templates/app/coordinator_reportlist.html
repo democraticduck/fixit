@@ -17,8 +17,8 @@
       <tbody>
         {% if reports %}
           {% for report in reports %}
-            <tr style="transform: rotate(0)"> <!--create new stacking context-->
-              <th scope="row"><a href="/detail?id={{ report.id }}" class="stretched-link">{{ report.title }}</a></th>
+            <tr style="transform: rotate(0)">
+              <th scope="row"><a href="{% url 'coordinator_reportdetail' %}?id={{ report.id }}" class="stretched-link">{{ report.title }}</a></th>
               <td>{{ report.created_at }}</td>
             </tr>
           {% endfor %}
