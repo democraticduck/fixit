@@ -77,15 +77,9 @@ class UserManager(BaseUserManager):
         return self.create_user(ic_num, password, **extra_fields)
 
 class User(AbstractUser):
-     class USER_ROLE(models.TextChoices):
-        ADMIN = 'ad', _('Admin')
-        COORDINATOR = 'co', _('Coordinator')
-        CUSTOMER = 'cu', _('Customer')
-
-
     ic_num = models.CharField(max_length=12, null=True, blank=True, unique=True)
     phone_num = models.CharField(max_length=15, null=True, blank=True)
-    role = models.CharField(choices = USER_ROLE.choices, default=USER_ROLE.CUSTOMER, max_length=2)
+
     username = None  # We disable username
     USERNAME_FIELD = 'ic_num'
     REQUIRED_FIELDS = []  # No other required fields
@@ -93,7 +87,6 @@ class User(AbstractUser):
     objects = UserManager()  # <-- add this line
 
 class Admin(User):
-    self.role = 
     work_id = models.CharField(max_length = 255, blank=False)
 
 class Coordinator(User):

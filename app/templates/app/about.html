@@ -1,8 +1,84 @@
-{% extends "app/layout.html" %} {% block content %}
+{% extends "app/layout.html" %}
+{% block content %}
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+}
 
-<h2>{{ title }}.</h2>
-<h3>{{ message }}</h3>
+.hero {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  top: 0;
+  left: 0;
+}
 
-<p>Sample Django Project.</p>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.center-box {
+  max-width: 960px;
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card {
+  text-align: center;
+}
+
+.card img {
+  width: 70%;
+  border-radius: 6px;
+}
+
+.card h2 {
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.card p {
+  color: #555;
+}
+</style>
+
+<div class="hero"></div>
+
+<div class="container">
+  <main class="center-box">
+    <div class="card">
+      <img src="/media/icon-11.png" alt="Engage">
+      <h2>Engage</h2>
+      <p>Communicite with your employees.</p>
+    </div>
+    <div class="card">
+      <img src="/media/icon-11.png" alt="Hub">
+      <h2>Hub</h2>
+      <p>Store your documents in one place.</p>
+    </div>
+    <div class="card">
+      <img src="/media/icon-11.png" alt="Analytics">
+      <h2>Analytics</h2>
+      <p>Analyze your organization’s progress.</p>
+    </div>
+    <div class="card">
+      <img src="/media/icon-11.png" alt="Track">
+      <h2>Track</h2>
+      <p>Track your organization’s events.</p>
+    </div>
+  </main>
+</div>
 
 {% endblock %}

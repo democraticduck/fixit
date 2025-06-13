@@ -1,52 +1,82 @@
-{% extends 'app/bootstrap.html' %}
-
+{% load static %}
 {% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}FixIt{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+    }
 
-{% block bootstrap5_content %}
+    .hero {
+      background: url(media/node-2.png) no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      z-index: -1;
+      color: white;
+      position: relative;
+    }
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
 
-      <a href="{% url 'home' %}" class="navbar-brand">Fixit</a>
-      <button
-        type="button"
-        class="navbar-toggler"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        
-        {% if user.is_authenticated %} {% include 'app/authpartial.html' %} {% endif %}
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%);
+    }
 
-        <li class="nav-item"><a href="{% url 'about' %}" class="nav-link">About</a></li>
+    .hero-title {
+      font-size: 4rem;
+      font-weight: 700;
+    }
 
-        <li class="nav-item"></li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
-        
-        {% if not user.is_authenticated %} {% include 'app/unauthpartial.html' %} {% endif %}
+    .hero-subtitle {
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
 
-        {% if user.is_authenticated %} {% include 'app/notification.html' %} {% endif %}
+    .navbar {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+      background: transparent !important;
+    }
 
-        {% if user.is_authenticated %} {% include 'app/logout.html' %} {% endif %}
+    .navbar-nav .nav-link {
+      color: white !important;
+      font-weight: 500;
+      margin-right: 1rem;
+    }
 
-  
-        
-      </ul>
-    </div>
+    .navbar-brand img {
+      height: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-overlay"></div>
+    {% include 'app/navbar.html' %}
+    {% block content %}{% endblock %}
   </div>
-</nav>
-
-<div class="container">
-  <h1>{% block title %}{% endblock %}</h1>
-  {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
-  {% block content %}{% endblock %}
-  <hr />
-  <footer>
-    <p>&copy; {{ year }} - My Django Application</p>
-  </footer>
-</div>
-
-{% endblock %}
+</body>
+</html>

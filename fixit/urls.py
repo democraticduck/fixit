@@ -23,6 +23,7 @@ from django.views.generic import TemplateView
 from app.views import Reportlist, ReportDetail
 from django.conf.urls.static import static
 from django.conf import settings
+from app.views import Home
 admin.autodiscover()
 
 admin.site.site_header = "Fixit Admin"
@@ -31,22 +32,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('newindex/', main_views.newindex, name='newindex'),
     re_path(r'^$', main_views.home, name='home'),
+    re_path(r'^home$', Home, name='Home'),
     re_path(r'^contact$', main_views.contact, name='contact'), #^ means starts with, $ denotes end of string
     re_path(r'^about$', main_views.about, name='about'),
-    re_path(r'^login/$',
-        main_views.login_user,
-        name='login'),
-    re_path(r'^signup/$',
-        main_views.signup,
-        name='signup'),
-    re_path(r'^report/$',
-        main_views.report,
-        name='report'),
+    re_path(r'^login/$',main_views.login_user,name='login'),
+    re_path(r'^signup/$',main_views.signup,name='signup'),
+    re_path(r'^report/$',main_views.report,name='report'),
     re_path(r'reportlist/', Reportlist.as_view(), name='reportlist'),
     re_path(r'detail/', ReportDetail.as_view(), name='reportdetail'),
-    re_path(r'^logout$',
-        LogoutView.as_view(template_name = 'app/index.html'),
-        name='logout'),
+    re_path(r'^logout$',LogoutView.as_view(template_name = 'app/index.html'),name='logout'),
     re_path(r'^menu$', main_views.menu, name='menu'),
     path('coordinator/login/', main_views.coordinator_login, name='coordinator_login'),
     path('coordinator/register/', main_views.coordinator_register, name='coordinator_register'),

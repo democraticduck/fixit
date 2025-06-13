@@ -24,7 +24,7 @@ def home(request):
     else:
         return render(
             request,
-            'app/index.html',
+            'app/home.html',
             {
                 'title':'Home Page',
                 'year': datetime.now().year,
@@ -51,11 +51,6 @@ def about(request):
     return render(
         request,
         'app/about.html',
-        {
-            'title':'ABC System',
-            'message':'This application processes ...',
-            'year':datetime.now().year,
-        }
     )
 
 
@@ -184,6 +179,9 @@ def signup(request):
         form = SignUpForm()
     context = {'form' : form}
     return render(request, 'app/signup.html' , context)
+
+def Home(request):
+    return render(request, 'app/home.html')
 
 class Reportlist(View):
     def get(self, request):

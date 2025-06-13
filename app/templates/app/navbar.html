@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand" href="{% url 'Home' %}">
+      <img src="media/icon-11.png" alt="FixIt Logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+          {% include 'app/authpartial.html' %}
+        {% endif %}
+
+        <li class="nav-item"><a href="{% url 'about' %}" class="nav-link">About</a></li>
+        <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+
+        {% if not user.is_authenticated %}
+          {% include 'app/unauthpartial.html' %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+          {% include 'app/notification.html' %}
+          {% include 'app/logout.html' %}
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
