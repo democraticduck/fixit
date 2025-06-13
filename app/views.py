@@ -13,7 +13,7 @@ from django.http import HttpResponseBadRequest, HttpResponseNotFound
 
 import shortuuid
 from .forms import LoginForm, SignUpForm, ReportForm
-from .models import Report
+from .models import Report, User
 from django.conf import settings
 
 def home(request):
@@ -254,6 +254,17 @@ def coordinator_login(request):
 def coordinator_register(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+        # remember old state
+        _mutable = form.data._mutable
+
+        # set to mutable
+        form.data._mutable = True
+
+        # сhange the values you want
+        form.data['role'] = 'co'
+        print(form.data['role'])
+        # set mutable flag back
+        form.data._mutable = _mutable
         if form.is_valid():
             form.save()
             return redirect('coordinator_login')
