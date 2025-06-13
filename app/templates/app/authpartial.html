@@ -1,6 +1,12 @@
+{% if user.role == 'cu' %}
 <li class="nav-item">
   <a href="{% url 'report' %}" class="nav-link">Report</a>
 </li>
+{% endif %}
 <li class="nav-item">
+  {% if user.role == 'cu' %}
   <a href="{% url 'reportlist' %}" class="nav-link">Report List</a>
+  {% else %}
+  <a href="{% url 'coordinator_reportlist' %}" class="nav-link">Report List</a>
+  {% endif %}
 </li>
