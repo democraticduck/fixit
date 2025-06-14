@@ -1,7 +1,8 @@
+{% load static %}
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid px-4">
     <a class="navbar-brand" href="{% url 'Home' %}">
-      <img src="media/icon-11.png" alt="FixIt Logo">
+      <img src="{% static 'app/media/icon-11(no_bg).png' %}" alt="FixIt Logo">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>

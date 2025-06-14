@@ -2,6 +2,7 @@
 {% load django_bootstrap5 %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}FixIt{% endblock %}</title>
@@ -9,8 +10,10 @@
   <link rel="stylesheet" href="{% static 'styles.css' %}">
   {% bootstrap_css %}
   {% bootstrap_javascript %}
+
   <style>
-    body, html {
+    body,
+    html {
       margin: 0;
       padding: 0;
       height: 100%;
@@ -18,21 +21,27 @@
     }
 
     .hero {
-      background: url(media/node-2.png) no-repeat center center fixed;
+      background: url("{% static 'app/media/node-2.png' %}") no-repeat center center fixed;
       background-size: cover;
-      height: 100vh;
-      z-index: -1;
+      min-height: 100vh;
       color: white;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 80px;
+      text-align: center;
     }
 
     .hero-overlay {
       position: absolute;
+      z-index: 0;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.3);
+      pointer-events: none;
     }
 
     .hero-content {
@@ -53,8 +62,9 @@
       font-weight: 400;
     }
 
+
     .navbar {
-      position: absolute;
+      position: fixed;
       top: 0;
       width: 100%;
       z-index: 10;
@@ -70,13 +80,24 @@
     .navbar-brand img {
       height: 40px;
     }
+
+     .modal {
+    z-index: 1050;
+  }
+
   </style>
 </head>
+
 <body>
+  {% include 'app/navbar.html' %}
   <div class="hero">
     <div class="hero-overlay"></div>
-    {% include 'app/navbar.html' %}
+    <div class="hero-content"></div>
     {% block content %}{% endblock %}
   </div>
+
+  
 </body>
+
+  
 </html>

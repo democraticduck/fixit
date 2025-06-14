@@ -37,7 +37,7 @@ urlpatterns = [
     re_path(r'^report/$',main_views.report,name='report'),
     re_path(r'reportlist/', Reportlist.as_view(), name='reportlist'),
     re_path(r'detail/', ReportDetail.as_view(), name='reportdetail'),
-    re_path(r'^logout$',LogoutView.as_view(template_name = 'app/index.html'),name='logout'),
+    re_path(r'^logout$',LogoutView.as_view(template_name = 'app/home.html'),name='logout'),
     re_path(r'^menu$', main_views.menu, name='menu'),
     path('coordinator/menu/', main_views.coordinator_menu, name='coordinator_menu'),
     path('coordinator/signup/', main_views.coordinator_signup, name='coordinator_signup'),

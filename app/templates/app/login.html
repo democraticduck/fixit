@@ -1,13 +1,60 @@
 {% extends "app/layout.html" %}
 {% load django_bootstrap5 %}
-
-{% block title %}Login{% endblock %}
-
 {% block content %}
-  <h2>Login</h2>
-  <form method="POST" action="{% url 'login' %}">
-    {% csrf_token %}
-    {% bootstrap_form form layout='vertical' %}
-    {% bootstrap_button button_type="submit" content="Login" %}
-  </form>
+
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top instead of center */
+  padding-top: 100px;       /* Add space below navbar */
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.center-box {
+  max-width: 960px;
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  display: grid;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card {
+  text-align: center;
+  align-items: center;
+}
+
+.card h2 {
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.card p {
+  color: #555;
+}
+</style>
+
+<div class="container">
+  <main class="center-box">
+    <div class="card">
+      <h2>Login</h2>
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      {% bootstrap_form form layout='vertical' %}
+      {% bootstrap_button button_type="submit" content="Login" %}
+    </form>
+    </div>
+  </main>
+</div>
+
 {% endblock %}

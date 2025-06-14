@@ -17,7 +17,7 @@ def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
     if request.user.is_authenticated:
-        return(redirect('/menu'))
+        return(redirect('/home'))
     else:
         return render(
             request,
@@ -142,9 +142,9 @@ def login_user(request):
     print(ic)
     if request.user.is_authenticated:
         if request.user.role == 'cu':
-            return(redirect('/menu'))
+            return(redirect('/home'))
         else:
-            return(redirect('/coordinator/menu'))
+            return(redirect('/home'))
     if request.method == 'POST':
         if not ic.isdigit() or password == '':
             messages.info(request, ('Invalid field(s)')) #add to html
@@ -156,9 +156,9 @@ def login_user(request):
             login(request, user)
             messages.success(request, ('Successfully login!'))
             if request.user.role == 'cu':
-                return(redirect('/menu'))
+                return(redirect('/home'))
             else:
-                return(redirect('/coordinator/menu'))
+                return(redirect('/home'))
 
         messages.success(request, ('Invalid ic or password'))
         return redirect('/login')
