@@ -3,6 +3,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+
+from .decorators import admin_only, coord_only #own decroators
+
 from django.forms import ValidationError
 from django.http import HttpRequest, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
@@ -13,51 +16,42 @@ from .models import Report
 
 import shortuuid
 
-def home(request):
-    """Renders the home page."""
-    assert isinstance(request, HttpRequest)
-    if request.user.is_authenticated:
-        return(redirect('/menu'))
-    else:
-        return render(
-            request,
-            'app/index.html',
-            {
-                'title':'Home Page',
-                'year': datetime.now().year,
-            }
-        )
+USER_LOGIN_URL = 'login/'
+COORDINATOR_LOGIN_URL = 'coordinator/login/' 
 
+@login_required(login_url=USER_LOGIN_URL)
+def home(request):
+    assert isinstance(request, HttpRequest)
+    return(redirect('/menu'))
+    
 
 def contact(request):
-    """Renders the contact page."""
+    
     assert isinstance(request, HttpRequest)
     return render(
         request,
         'app/contact.html',
         {
             'title':'Contact',
-            'message':'Dr. Yeoh.',
+            'message':'Mr John.',
             'year':datetime.now().year,
         }
     )
 
 
 def about(request):
-
-    """Renders the about page."""
     assert isinstance(request, HttpRequest)
     return render(
         request,
         'app/about.html',
         {
-            'title':'ABC System',
-            'message':'This application processes ...',
+            'title':'FIXIT',
+            'message':'This application fixes all your problems.',
             'year':datetime.now().year,
         }
     )
 
-
+@login_required(login_url=USER_LOGIN_URL)
 def menu(request):
     #if user
     check_employee = request.user.groups.filter(name='employee').exists()
@@ -81,10 +75,8 @@ def handle_upload(f, dir_path, name):
         for chunk in f.chunks():
             destination.write(chunk)
     
-    print('success')
 
-
-@login_required(login_url='/login')
+@login_required(login_url=USER_LOGIN_URL)
 def report(request):
     assert isinstance(request, HttpRequest) #checks if request is an instance of HttpRequest
     if request.method == 'POST':
@@ -122,34 +114,17 @@ def report(request):
     )
 
 
-def newindex(request):
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/newindex.html',
-        {
-            'title':'New Index',
-        }
-    )
-
-
-def onlyInt(val):
-        if not val.isdigit():
-            raise ValidationError('ID contains characters')
-
-
-def login_user(request):
-    """Renders the login page."""
+def login_user(request): #for coord and nrml user
     assert isinstance(request, HttpRequest)
     
     ic = request.POST.get('ic_num')
     password = request.POST.get('password')
-    print(ic)
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         if request.user.role == 'cu':
             return(redirect('/menu'))
         else:
             return(redirect('/coordinator/menu'))
+
     if request.method == 'POST':
         if not ic.isdigit() or password == '':
             messages.info(request, ('Invalid field(s)')) #add to html
@@ -177,7 +152,7 @@ def login_user(request):
     )
 
 
-def signup(request):
+def signup(request): #signup as user
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -199,7 +174,7 @@ class Reportlist(View):
     def get(self, request):
         reports = request.user.submitted_reports.all()
         return render(request, "app/reportlist.html", {"reports": reports})
-
+    
 
 class ReportDetail(View):
     def get(self, request):
@@ -223,10 +198,8 @@ class ReportDetail(View):
             "Progress Detail": report['progress_detail'],
         }})
 
-def coordinator_signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        # remember old state
+"""
+# remember old state
         _mutable = form.data._mutable
 
         # set to mutable
@@ -237,6 +210,16 @@ def coordinator_signup(request):
         print(form.data['role'])
         # set mutable flag back
         form.data._mutable = _mutable
+
+"""
+
+#move to coordinatorviews
+def coordinator_register(request):
+    from .forms import CoordRegisterForm
+    if request.method == 'POST':
+        #change request.POST instead?
+        form = CoordRegisterForm(request.POST)
+        
         if form.is_valid():
             form.save()
             username = form.cleaned_data['ic_num']
@@ -245,26 +228,26 @@ def coordinator_signup(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ('Successfully registered!'))
-            return redirect('/coordinator/menu')
+            return redirect('coordinator/register/')
     else:
-        form = SignUpForm()
-        form.fields['role'].initial = 'co'
+        form = CoordRegisterForm()
+        #form.fields['role'].initial = 'co'
     return render(request, 'app/coordinator_signup.html', {'form': form})
 
 
-@login_required
+@login_required(login_url = COORDINATOR_LOGIN_URL)
 def coordinator_menu(request):
     return render(request,'app/coordinator_menu.html', {'user': request.user})
 
 
-@login_required
+@login_required(login_url = COORDINATOR_LOGIN_URL)
 @never_cache
 def coordinator_reportlist(request):
     reports = request.user.managed_reports.all()
     return render(request, "app/coordinator_reportlist.html", {'reports': reports})
 
 
-@login_required
+@login_required(login_url = COORDINATOR_LOGIN_URL)
 def coordinator_reportdetail(request):
     report_id = request.GET.get('id')
     report = get_object_or_404(Report, id=report_id, manage_by=request.user)

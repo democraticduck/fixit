@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Notification, Report, User
+from .models import Notification, Report, BaseUser
 
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'approve_status', 'created_at', 'days_since_creation')
@@ -19,5 +19,5 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Report, ReportAdmin)
-admin.site.register(User, UserAdmin)
+admin.site.register(BaseUser, UserAdmin)
 admin.site.register(Notification)

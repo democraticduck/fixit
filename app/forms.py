@@ -5,20 +5,20 @@ Definition of forms.
 from django import forms
 
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Report
+from .models import BaseUser, Report, CoordinatorRegistration
 
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 
-class LoginForm(forms.ModelForm):
+class UserLoginForm(forms.ModelForm):
     use_required_attribute = False
     def onlyInt(val):
         if not val.isdigit():
             raise ValidationError('ID contains characters')
 
     class Meta:
-        model = User
+        model = BaseUser
         fields = ['ic_num', 'password']
 
     def __init__(self, *args, **kwargs):
@@ -38,10 +38,8 @@ class LoginForm(forms.ModelForm):
         self.fields['password'].widget.attrs['placeholder'] = 'Password'
         self.fields['password'].help_text = ''
 
-class SignUpForm(UserCreationForm):
-    # email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Email Address"}))
-    # first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "First Name"}))
-    # last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Last Name"}))
+class UserSignUpForm(UserCreationForm):
+    
     use_required_attribute = False
     def onlyInt(val):
         if not val.isdigit():
@@ -55,51 +53,56 @@ class SignUpForm(UserCreationForm):
         
 
     class Meta:
-        model = User
+        model = BaseUser
         fields = ['first_name', 'last_name', 'ic_num', 'phone_num', 'email', 'password1', 'password2', 'role']
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
 
-        self.fields['first_name'].widget.attrs['class'] = 'form-control'
-        self.fields['first_name'].widget.attrs['placeholder'] = 'First Name'
-        self.fields['first_name'].label = 'First Name'
-        self.fields['first_name'].help_text = ''
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs['class'] = 'form-control'
+            self.fields['work_id'].help_text = ''
 
-        self.fields['last_name'].widget.attrs['class'] = 'form-control'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'Last Name'
+        self.fields['first_name'].label = 'First Name' 
         self.fields['last_name'].label = 'Last Name'
-        self.fields['last_name'].help_text = ''
-        
-        self.fields['ic_num'].widget.attrs['class'] = 'form-control'
-        self.fields['ic_num'].widget.attrs['placeholder'] = 'IC Number'
         self.fields['ic_num'].label = 'IC Number'
-        self.fields['ic_num'].help_text = ''
+        
         #self.fields['ic_num'].validators = [onlyInt, MaxLengthValidator(12)]
         
-        self.fields['email'].widget.attrs['class'] = 'form-control'
         self.fields['email'].label = 'Email Address'
-        self.fields['email'].widget.attrs['placeholder'] = 'Email Address'
-        self.fields['email'].help_text = ''
-        
-        self.fields['phone_num'].widget.attrs['class'] = 'form-control'
         self.fields['phone_num'].label = 'Phone Number'
-        self.fields['phone_num'].widget.attrs['placeholder'] = 'Phone Number'
-        self.fields['phone_num'].help_text = ''
         #self.fields['phone'].validators = [phoneValidator]
         
-
-        self.fields['password1'].widget.attrs['class'] = 'form-control'
         self.fields['password1'].label = 'Password'
-        self.fields['password1'].widget.attrs['placeholder'] = 'Password'
         self.fields['password1'].help_text = '<ul class="form-text text-muted" small><li>Your password can\'t be too similar to your other personal information.</li><li>Your password must contain at least 8 characters.</li><li>Your password can\'t be a commonly used password.</li><li>Your password can\'t be entirely numeric.</li></ul>'
         
-        self.fields['password2'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].label = 'Confirm Password'
-        self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
         self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</span>'
 
         self.fields['role'].widget = forms.HiddenInput()
+
+class CoordRegisterForm(UserSignUpForm):
+    use_required_attribute = False
+
+    class Meta:
+        model = CoordinatorRegistration
+        
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs['class'] = 'form-control'
+            self.fields['work_id'].help_text = ''
+
+        
+        self.fields['work_id'].label = 'Work ID Number'
+
+        self.fields['assigned_area'].widget = forms.Select(attrs={'class': 'form-select'})
+        self.fields['assigned_area'].label = 'Area'
+
+
+
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -139,21 +142,7 @@ class ReportForm(forms.ModelForm):
         self.fields['title'].help_text = ''
     
 
-        """
-        self.fields['imgs'].widget = forms.ImageField()
-        self.fields['imgs'].widget.attrs['class'] = 'form-control'
-        self.fields['imgs'].label = 'Images'
-        self.fields['imgs'].widget.attrs['placeholder'] = 'Images'
-        self.fields['imgs'].help_text = ''
-        """
-    """
-    title = forms.CharField(max_length=50, required=True)
-    description = forms.CharField(max_length=500, required=False)
-    category = forms.ChoiceField(choices=Report.CATEGORY.choices, required=True)
-    loc_lng = forms.DecimalField(required=True)
-    loc_lat = forms.DecimalField(required=True)
-    
-    """
+
 
 class ReportUpdateForm(forms.ModelForm):
     class Meta:

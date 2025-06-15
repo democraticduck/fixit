@@ -106,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 DEBUG = True
-AUTH_USER_MODEL = 'app.User'
+AUTH_USER_MODEL = 'app.BaseUser'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 STATIC_URL = "static/"
