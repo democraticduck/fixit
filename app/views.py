@@ -4,14 +4,14 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
-from django.http import HttpRequest, HttpResponseNotFound
+from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.views import View
-from django.views.decorators.cache import never_cache
 from .forms import LoginForm, SignUpForm, ReportForm, ReportUpdateForm
-from .models import Report
+from .models import Notification, Report
 
-import shortuuid
+import shortuuid, os
 
 def home(request):
     """Renders the home page."""
@@ -51,20 +51,6 @@ def about(request):
         request,
         'app/about.html',
     )
-
-
-def menu(request):
-    #if user
-    check_employee = request.user.groups.filter(name='employee').exists()
-
-    context = {
-            'title':'Main Menu',
-            'is_employee': check_employee,
-            'year':datetime.now().year,
-        }
-    context['user'] = request.user
-
-    return render(request,'app/menu.html',context)
 
 
 def handle_upload(f, dir_path, name):
@@ -183,7 +169,7 @@ def signup(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ('Successfully registered!'))
-            return redirect('home')
+            return redirect('/home')
     else:
         form = SignUpForm()
     return render(request, 'app/signup.html' ,{'form' : form})
@@ -191,6 +177,7 @@ def signup(request):
 
 def Home(request):
     return render(request, 'app/home.html')
+
 
 class Reportlist(View):
     def get(self, request):
@@ -220,6 +207,7 @@ class ReportDetail(View):
             "Progress Detail": report['progress_detail'],
         }})
 
+
 def coordinator_signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -231,7 +219,7 @@ def coordinator_signup(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ('Successfully registered!'))
-            return redirect('/coordinator/menu')
+            return redirect('/home')
     else:
         form = SignUpForm()
         form.fields['role'].initial = 'co'
@@ -239,12 +227,6 @@ def coordinator_signup(request):
 
 
 @login_required
-def coordinator_menu(request):
-    return render(request,'app/coordinator_menu.html', {'user': request.user})
-
-
-@login_required
-@never_cache
 def coordinator_reportlist(request):
     reports = request.user.managed_reports.all()
     return render(request, "app/coordinator_reportlist.html", {'reports': reports})
@@ -260,12 +242,16 @@ def coordinator_reportdetail(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Report updated.")
-            # redirect back to same detail page (prevents double-post)
-            return redirect('/coordinator/menu')
+            Notification.objects.create(
+                title=f"Update: {report.title}",
+                description="The status of your report has been updated. Please check for details.",
+                sent_at=timezone.now(),
+                report=report
+            )
+            return redirect('/home')
     else:
-        form = ReportUpdateForm()
+        form = ReportUpdateForm(instance=report)
 
-    import os
     img_path = os.path.join(settings.MEDIA_ROOT, report.photo_url)
     img_name = os.listdir(img_path) if os.path.exists(img_path) else []
     img_path_list = [settings.MEDIA_URL + report.photo_url + "/" + name for name in img_name]

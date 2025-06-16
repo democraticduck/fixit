@@ -34,7 +34,7 @@
     }
 
     .hero-overlay {
-      position: absolute;
+      position: fixed;
       z-index: 0;
       top: 0;
       left: 0;
@@ -62,7 +62,6 @@
       font-weight: 400;
     }
 
-
     .navbar {
       position: fixed;
       top: 0;
@@ -81,10 +80,9 @@
       height: 40px;
     }
 
-     .modal {
+    .modal {
     z-index: 1050;
   }
-
   </style>
 </head>
 
@@ -94,10 +92,7 @@
     <div class="hero-overlay"></div>
     <div class="hero-content"></div>
     {% block content %}{% endblock %}
-  </div>
-
-  
+  </div>  
 </body>
-
   
 </html>

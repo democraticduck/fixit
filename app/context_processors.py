@@ -1,3 +1,4 @@
+from django.db.models import Q
 from .models import Notification
 
 def notification_context(request):
@@ -7,13 +8,14 @@ def notification_context(request):
         user = request.user
 
         status_notifications = Notification.objects.filter(
-            report_id__user_id=user,
-            description__startswith="The status"
+            report__user_id=user,
+            description__startswith="The"
         )
 
         reminder_notifications = Notification.objects.filter(
-            report_id__manage_by=user,
-            description__startswith="Reminder"
+            report__manage_by=user,
+        ).filter(
+            Q(description__startswith="You") | Q(description__startswith="This")
         )
 
         context['notifications'] = (

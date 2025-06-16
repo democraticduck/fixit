@@ -48,11 +48,12 @@ html, body {
   <main class="center-box">
     <div class="card">
       <h2>Login</h2>
-    <form method="POST" action="{% url 'login' %}">
-      {% csrf_token %}
-      {% bootstrap_form form layout='vertical' %}
-      {% bootstrap_button button_type="submit" content="Login" %}
-    </form>
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% bootstrap_form form layout='vertical' %}
+        {% bootstrap_button button_type="submit" content="Login" %}
+      </form>
+      <div style="height: 1rem;"></div>
     </div>
   </main>
 </div>

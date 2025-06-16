@@ -45,9 +45,15 @@
           {% if notifications %}
             {% for notification in notifications %}
               <h5>
-                <a href="/detail?id={{ notification.report_id.id }}"
-                  >{{ notification.get_report_title }}</a
-                >
+                {% if user.role == 'cu' %}
+                  <a href="{% url 'reportdetail' %}?id={{ notification.report.id }}"
+                    >{{ notification.title }}</a
+                  >
+                {% else %}
+                  <a href="{% url 'coordinator_reportdetail' %}?id={{ notification.report.id }}"
+                    >{{ notification.title }}</a
+                  >
+                {% endif %}
               </h5>
               <p>{{ notification.description }}</p>
               <p style="text-align: right"><small>{{ notification.sent_at }}</small></p>

@@ -44,6 +44,11 @@ html, body {
 .card p {
   color: #555;
 }
+
+.form-text {
+  margin-left: 0.5rem;
+  text-align: left !important;
+}
 </style>
 
 
@@ -51,10 +56,14 @@ html, body {
   <main class="center-box">
     <div class="card">
       <h2>Sign Up</h2>
-    <form method="POST" action="{% url 'signup' %}">
-      {% csrf_token %} {% bootstrap_form form layout=layout size=size %} {%
-      bootstrap_button button_type="submit" content="OK" %}
-    </form>
+      <form method="POST" action="{% url 'signup' %}">
+        {% csrf_token %}
+        {% bootstrap_form form layout=layout size=size %}
+        {% bootstrap_button button_type="submit" content="Sign Up" %}
+      </form>
+      <div class="mt-3 mb-3">
+        <a href="{% url 'coordinator_signup' %}">Register as Coordinator?</a>
+      </div>
     </div>
   </main>
 </div>

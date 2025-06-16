@@ -2,7 +2,14 @@
 {% load django_bootstrap5 %}
 {% block content %}
 
-<div class="container">
+<style>
+.hero {
+  position: relative;
+  z-index: 1;
+}
+</style>
+
+<div class="container" style="z-index: 2;">
   {% if report %}
     <div
       id="carouselExampleControls"
@@ -72,7 +79,7 @@
           {% for attr, val in fields.items %}
             <tr>
               <th scope="row">{{attr}}</th>
-              <td>{{val}}</td>
+              <td style="text-align: left">{{val}}</td>
             </tr>
           {% endfor %}
             <tr>
@@ -94,6 +101,8 @@
       <button type="submit" class="btn btn-warning">
         Update Status
       </button>
+
+      <div style="height: 1rem;"></div>
     </form>
 
   {% else %}

@@ -1,24 +1,32 @@
 from django.contrib import admin
-from .models import Report, Notification
-from .models import User
 from django.utils import timezone
+from .models import Notification, Report, User
 
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'approve_status', 'created_at', 'days_since_creation')
-    list_filter = ('approve_status', 'category', )
-    search_fields = ('title', )
+    list_display = ('title', 'category', 'approve_status', 'case_status', 'created_at', 'days_since_creation',)
+    list_filter = ('category', 'approve_status', 'case_status', )
+    search_fields = ('title',)
+    fields = ('title', 'description', 'loc_lng', 'loc_lat', 'approve_status', 'category', 'photo_url', 'created_at', 'updated_at', 'user_id', 'manage_by', 'case_status', 'progress_detail',)
+    readonly_fields = ('title', 'description', 'loc_lng', 'loc_lat', 'category', 'photo_url', 'created_at', 'updated_at', 'user_id', 'case_status', 'progress_detail',)
 
-    fields = ('title', 'description', 'loc_lng', 'loc_lat', 'approve_status', 'case_status', 'category', 'photo_url', 'user_id',)
+    def save_model(self, request, obj, form, change):
+        if change:
+            report = Report.objects.get(pk=obj.pk)
+            report.case_status = 'op'
+            if report.manage_by != obj.manage_by and obj.manage_by is not None:
+                Notification.objects.create(
+                    title=f"New: {report.title}",
+                    description=f"You have been assigned to manage the case: \"{obj.title}\".",
+                    sent_at=timezone.now(),
+                    report=obj
+                )
+        super().save_model(request, obj, form, change)
 
-    readonly_fields = ('title', 'description', 'loc_lng', 'loc_lat', 'category', 'photo_url', 'user_id',)
-    @property
-    def days_since_creation(self):
-        diff = timezone.now() - self.created_at
-        return diff.days
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('ic_num', 'phone_num',)
-    search_fields = ('ic_num', )
+    list_display = ('ic_num', 'first_name', 'last_name', 'phone_num', 'role',)
+    list_filter = ('role',)
+    search_fields = ('ic_num',)
 
 admin.site.register(Report, ReportAdmin)
 admin.site.register(User, UserAdmin)
