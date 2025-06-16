@@ -248,7 +248,7 @@ def coordinator_reportdetail(request):
                 sent_at=timezone.now(),
                 report=report
             )
-            return redirect('/home')
+            return redirect('/coordinator/reportlist')
     else:
         form = ReportUpdateForm(instance=report)
 

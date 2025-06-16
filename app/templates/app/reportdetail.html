@@ -77,7 +77,11 @@
         {% for attr, val in fields.items %}
           <tr>
             <th scope="row">{{attr}}</th>
-            <td style="text-align: left">{{val|linebreaksbr}}</td>
+            {% if attr == "Created at" %}
+              <td style="text-align: left">{{val}}</td>
+            {% else %}
+              <td style="text-align: left">{{val|linebreaksbr}}</td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>
@@ -87,6 +91,12 @@
       href="https://www.google.com/maps/search/?api=1&query={{ report.loc_lat }},{{ report.loc_lng }}"
       ><button class="btn btn-primary" action="">View on map</button></a
     >
+
+    <a href="{% url 'reportlist' %}">
+      <button class="btn btn-secondary">
+        Back
+      </button>
+    </a>
 
     <div style="height: 1rem;"></div>
   {% else %}

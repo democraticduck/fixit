@@ -9,7 +9,8 @@ def notification_context(request):
 
         status_notifications = Notification.objects.filter(
             report__user_id=user,
-            description__startswith="The"
+        ).filter(
+            Q(description__startswith="Your") | Q(description__startswith="The")
         )
 
         reminder_notifications = Notification.objects.filter(

@@ -12,14 +12,35 @@ class ReportAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if change:
             report = Report.objects.get(pk=obj.pk)
-            report.case_status = 'op'
+
+            # Notify user if approval status changed to approved
+            if report.approve_status != obj.approve_status:
+                if obj.approve_status == 'ap':
+                    Notification.objects.create(
+                        title=f"Approved: {report.title}",
+                        description=f"Your report has been approved by the admin.",
+                        sent_at=timezone.now(),
+                        report=obj
+                    )
+
+                elif obj.approve_status == 'rj':
+                    obj.case_status = 'cl'
+                    Notification.objects.create(
+                        title=f"Rejected: {report.title}",
+                        description=f"Your report has been rejected by the admin.",
+                        sent_at=timezone.now(),
+                        report=obj
+                    )
+
             if report.manage_by != obj.manage_by and obj.manage_by is not None:
+                obj.case_status = 'op'
                 Notification.objects.create(
                     title=f"New: {report.title}",
                     description=f"You have been assigned to manage the case: \"{obj.title}\".",
                     sent_at=timezone.now(),
                     report=obj
                 )
+
         super().save_model(request, obj, form, change)
 
 
