@@ -1,68 +1,105 @@
-{% extends "app/layout.html" %} 
-{% load django_bootstrap5 %} 
+{% extends "app/layout.html" %}
+{% load django_bootstrap5 %}
 {% block title %}
 
 Coordinator Registration {% endblock %} {% block content %}
 
 <style>
-html, body {
-  height: 100%;
-  margin: 0;
-}
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  .wrapper {
+    width: 100%;
+    position: fixed;
+    z-index: 10;
+    background: transparent;
+  }
+
+  .bottom-wrapper {
+    width: 100%;
+    padding-top: 70px;
+    /* make room for fixed header/navbar */
+    z-index: 5;
+    overflow: auto;
+    height: calc(100vh - 70px);
+    /* ensure scroll if content overflows */
+  }
+
+  .table-container {
+    max-width: 960px;
+    width: 100%;
+    overflow-x: auto;
+    word-wrap: break-word;
+  }
+
+  .table td,
+  .table th {
+    word-break: break-word;
+    white-space: normal;
+    max-width: 300px;
+  }
 
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Align to top instead of center */
-  padding-top: 100px;       /* Add space below navbar */
-  min-height: 100vh;
-  position: relative;
-  z-index: 1;
-}
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Align to top instead of center */
+    padding-top: 100px;
+    /* Add space below navbar */
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
 
-.center-box {
-  max-width: 960px;
-  background: white;
-  padding: 40px;
-  border-radius: 10px;
-  display: grid;
-  align-items: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
+  .center-box {
+    max-width: 960px;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    display: grid;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
 
-.card {
-  text-align: center;
-  align-items: center;
-}
+  .card {
+    text-align: center;
+    align-items: center;
+  }
 
-.card h2 {
-  margin-top: 10px;
-  font-size: 20px;
-}
+  .card h2 {
+    margin-top: 10px;
+    font-size: 20px;
+  }
 
-.card p {
-  color: #555;
-}
+  .card p {
+    color: #555;
+  }
 
-.form-text {
-  margin-left: 0.5rem;
-  text-align: left !important;
-}
+  .form-text {
+    margin-left: 0.5rem;
+    text-align: left !important;
+  }
 </style>
 
-
-<div class="container">
-  <main class="center-box">
-    <div class="card">
-      <h2>Coordinator Registration</h2>
-      <form method="POST" action="{% url 'coordinator_signup' %}">
-        {% csrf_token %}
-        {% bootstrap_form form layout=layout size=size %}
-        {% bootstrap_button button_type="submit" content="Register" %}
-      </form>
-      <div style="height: 1rem;"></div>
+<div class="wrapper">
+  <div class="bottom-wrapper">
+    <div class="container">
+      <main class="center-box">
+        <div class="card">
+          <h2>Coordinator Registration</h2>
+          <form method="POST" action="{% url 'coordinator_signup' %}">
+            {% csrf_token %}
+            {% bootstrap_form form layout=layout size=size %}
+            {% bootstrap_button button_type="submit" content="Register" %}
+          </form>
+          <div style="height: 1rem;"></div>
+        </div>
+      </main>
     </div>
-  </main>
+  </div>
 </div>
 {% endblock %}

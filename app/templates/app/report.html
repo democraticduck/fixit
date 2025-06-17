@@ -1,75 +1,106 @@
 {% extends "app/layout.html" %} {% load django_bootstrap5 %} {% block title %}
-Report an issue {% endblock %} {% block content %} 
+Report an issue {% endblock %} {% block content %}
 
 <style>
-.container {
-  align-items: flex-start;
-  position: relative;
-  z-index: 1;
-}
+  .container {
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
 
-.white-box {
-  position: relative;
-  z-index: 2;
-  background-color: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  width: 100%;
-  max-width: 960px;
-  margin: auto;
-}
+  .white-box {
+    position: relative;
+    z-index: 2;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 960px;
+    margin: auto;
+  }
 
-.hero {
-  color: black;
-}
+  .wrapper {
+    width: 100%;
+    position: fixed;
+    z-index: 10;
+    background: transparent;
+  }
+
+  .bottom-wrapper {
+    width: 100%;
+    padding-top: 70px;
+    /* make room for fixed header/navbar */
+    z-index: 5;
+    overflow: auto;
+    height: calc(100vh - 70px);
+    /* ensure scroll if content overflows */
+  }
+
+  .table-container {
+    max-width: 960px;
+    width: 100%;
+    overflow-x: auto;
+    word-wrap: break-word;
+  }
+
+  .table td,
+  .table th {
+    word-break: break-word;
+    white-space: normal;
+    max-width: 300px;
+  }
+
+  .hero {
+    color: black;
+  }
 </style>
 
-<div class="container">
-  <div class="white-box">
-    <form
-      method="POST"
-      action="{% url 'report' %}"
-      enctype="multipart/form-data"
-    >
-      {% csrf_token %}
-      {% bootstrap_form form layout=layout size=size %}
-      
-      <input type="hidden" name="loc_lat" id="loc_lat">
-      <input type="hidden" name="loc_lng" id="loc_lng">
-      
-      <button type="button" class="btn btn-secondary" id="locBtn">Get location</button>
-      <button class="btn btn-primary" type="submit" id="submitBtn" disabled>Submit</button>
-    </form>
+<div class="wrapper">
+  <div class="bottom-wrapper">
+    <div class="container">
+      <div class="white-box">
+        <form method="POST" action="{% url 'report' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% bootstrap_form form layout=layout size=size %}
+
+          <input type="hidden" name="loc_lat" id="loc_lat">
+          <input type="hidden" name="loc_lng" id="loc_lng">
+
+          <button type="button" class="btn btn-secondary" id="locBtn">Get location</button>
+          <button class="btn btn-primary" type="submit" id="submitBtn" disabled>Submit</button>
+        </form>
 
 
 
-<script>
-  const btn = document.getElementById("locBtn");
-  const submitBtn = document.getElementById("submitBtn");
-  const lat = document.getElementById("loc_lat");
-  const lng = document.getElementById("loc_lng");
+        <script>
+          const btn = document.getElementById("locBtn");
+          const submitBtn = document.getElementById("submitBtn");
+          const lat = document.getElementById("loc_lat");
+          const lng = document.getElementById("loc_lng");
 
-  btn.addEventListener("click", function () {
-    btn.innerText = 'Loading...';
-    navigator.geolocation.getCurrentPosition(success, error);
-  });
+          btn.addEventListener("click", function () {
+            btn.innerText = 'Loading...';
+            navigator.geolocation.getCurrentPosition(success, error);
+          });
 
-  function success(pos) {
-    console.log(pos);
-    lat.value = pos.coords.latitude;
-    lng.value = pos.coords.longitude;
-    submitBtn.disabled = false;
-    console.log(pos.coords.latitude, " ", pos.coords.longitude);
-    btn.innerText = 'Get location';
-  }
+          function success(pos) {
+            console.log(pos);
+            lat.value = pos.coords.latitude;
+            lng.value = pos.coords.longitude;
+            submitBtn.disabled = false;
+            console.log(pos.coords.latitude, " ", pos.coords.longitude);
+            btn.innerText = 'Get location';
+          }
 
-  function error() {
-    alert("Sorry, no position available.");
-    btn.innerText = 'Get location';
-  }
-</script>
+          function error() {
+            alert("Sorry, no position available.");
+            btn.innerText = 'Get location';
+          }
+        </script>
 
+      </div>
+    </div>
   </div>
 </div>
- {% endblock %}
+{% endblock %}

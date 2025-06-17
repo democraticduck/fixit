@@ -3,62 +3,97 @@
 {% block content %}
 
 <style>
-html, body {
-  height: 100%;
-  margin: 0;
-}
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
 
-.hero {
-  position: relative;
-  z-index: 1;
-}
+  .hero {
+    position: relative;
+    z-index: 1;
+  }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 100px;
-  min-height: 100vh;
-  position: relative;
-  z-index: 2;
-}
+  .wrapper {
+    width: 100%;
+    position: fixed;
+    z-index: 10;
+    background: transparent;
+  }
 
-.center-box {
-  max-width: 960px;
-  background: white;
-  padding: 40px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  min-height: 400px;
-  min-width: 1200px;
-  z-index: 3;
-}
+  .bottom-wrapper {
+    width: 100%;
+    padding-top: 70px;
+    /* make room for fixed header/navbar */
+    z-index: 5;
+    overflow: auto;
+    height: calc(100vh - 70px);
+    /* ensure scroll if content overflows */
+  }
 
-.page-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: left;
-  width: 100%;
-  color: #000;
-}
+  .table-container {
+    max-width: 960px;
+    width: 100%;
+    overflow-x: auto;
+    word-wrap: break-word;
+  }
+
+  .table td,
+  .table th {
+    word-break: break-word;
+    white-space: normal;
+    max-width: 300px;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 100px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+  }
+
+  .center-box {
+    max-width: 960px;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    min-height: 400px;
+    min-width: 1200px;
+    z-index: 3;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: left;
+    width: 100%;
+    color: #000;
+  }
 </style>
-<div class="container" style="z-index: 1; position: relative;">
-  <main class="center-box" style="z-index: 1; position: relative;">
-    <h1 class="page-title">Report List</h1>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Report</th>
-          <th scope="col">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if reports %}
-          {% for report in reports %}
+
+<div class="wrapper">
+  <div class="bottom-wrapper">
+    <div class="container" style="z-index: 1; position: relative;">
+      <main class="center-box" style="z-index: 1; position: relative;">
+        <h1 class="page-title">Report List</h1>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Report</th>
+              <th scope="col">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if reports %}
+            {% for report in reports %}
             <tr>
               <th scope="row">
                 <a href="{% url 'reportdetail' %}?id={{ report.id }}">
@@ -67,15 +102,17 @@ html, body {
               </th>
               <td>{{ report.created_at }}</td>
             </tr>
-          {% endfor %}
-        {% else %}
-          <tr>
-            <th scope="row">-</th>
-            <td>-</td>
-          </tr>
-        {% endif %}
-      </tbody>
-    </table>
-  </main>
+            {% endfor %}
+            {% else %}
+            <tr>
+              <th scope="row">-</th>
+              <td>-</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </main>
+    </div>
+  </div>
 </div>
 {% endblock %}
