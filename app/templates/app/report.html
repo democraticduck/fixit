@@ -23,7 +23,6 @@ Report an issue {% endblock %} {% block content %}
   .wrapper {
     width: 100%;
     position: fixed;
-    z-index: 10;
     background: transparent;
   }
 
@@ -31,7 +30,6 @@ Report an issue {% endblock %} {% block content %}
     width: 100%;
     padding-top: 70px;
     /* make room for fixed header/navbar */
-    z-index: 5;
     overflow: auto;
     height: calc(100vh - 70px);
     /* ensure scroll if content overflows */
@@ -67,7 +65,7 @@ Report an issue {% endblock %} {% block content %}
           <input type="hidden" name="loc_lat" id="loc_lat">
           <input type="hidden" name="loc_lng" id="loc_lng">
 
-          <button type="button" class="btn btn-secondary" id="locBtn">Get location</button>
+          <button type="button" class="btn btn-secondary" id="locBtn">Get Location</button>
           <button class="btn btn-primary" type="submit" id="submitBtn" disabled>Submit</button>
         </form>
 
