@@ -31,12 +31,13 @@ class UserManager(BaseUserManager):
         return self.create_user(ic_num, password, **extra_fields)
 
 
-class User(AbstractUser):
-    class USER_ROLE(models.TextChoices):
-        ADMIN = 'ad', _('Admin')
-        COORDINATOR = 'co', _('Coordinator')
-        CUSTOMER = 'cu', _('Customer')
+class USER_ROLE(models.TextChoices):
+    ADMIN = 'ad', _('Admin')
+    COORDINATOR = 'co', _('Coordinator')
+    CUSTOMER = 'cu', _('Customer')
 
+
+class User(AbstractUser):
     ic_num = models.CharField(max_length=12, null=True, blank=True, unique=True)
     phone_num = models.CharField(max_length=15, null=True, blank=True)
     role = models.CharField(choices = USER_ROLE.choices, default=USER_ROLE.CUSTOMER, max_length=2)
@@ -53,6 +54,20 @@ class Admin(User):
 
 class Coordinator(User):
     work_id = models.CharField(max_length = 255, blank=False)
+
+
+class RegistrationRequest(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=150)
+    ic_num = models.CharField(max_length=12, unique=True)
+    phone_num = models.CharField(max_length=15)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)  # Hashed password
+    date_requested = models.DateTimeField(default=timezone.now)
+    is_approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.ic_num})"
 
 
 class Report(models.Model):
@@ -86,7 +101,7 @@ class Report(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     photo_url = models.TextField(null=True, blank=True)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='submitted_reports') #related name for related obj back to current
-    manage_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='managed_reports', limit_choices_to={ 'role': User.USER_ROLE.COORDINATOR })
+    manage_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='managed_reports', limit_choices_to={ 'role': USER_ROLE.COORDINATOR })
 
     def __str__(self):
         return str(self.title)

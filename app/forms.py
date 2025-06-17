@@ -101,6 +101,42 @@ class SignUpForm(UserCreationForm):
 
         self.fields['role'].widget = forms.HiddenInput()
 
+
+class RegistrationForm(forms.Form):
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=150)
+    ic_num = forms.CharField(max_length=12)
+    phone_num = forms.CharField(max_length=15)
+    email = forms.EmailField()
+    password1 = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Password",
+        help_text=(
+            "<ul style='margin-bottom: 0; font-size: 0.7rem; font-weight: 400;'>"
+            "<li>Your password can't be too similar to your other personal information.</li>"
+            "<li>Your password must contain at least 8 characters.</li>"
+            "<li>Your password can't be a commonly used password.</li>"
+            "<li>Your password can't be entirely numeric.</li>"
+            "</ul>"
+        )
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Confirm Password",
+        help_text=(
+            "<ul style='margin-bottom: 0; font-size: 0.7rem; font-weight: 400;'>"
+            "<li>Enter the same password as before, for verification.</li>"
+            "</ul>"
+        )
+    )
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get('password1') != cleaned.get('password2'):
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned
+
+
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 

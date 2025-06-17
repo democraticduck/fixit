@@ -11,7 +11,6 @@ def notify_overdue_reports():
         days_since_update = (now - report.updated_at).days
 
         # Notify only if it's a multiple of 7 days and not zero
-        #if days_since_update >= 7 and days_since_update % 7 == 0:
         if days_since_update >= 7 and days_since_update % 7 == 0:
             # Check if a notification has already been sent for this day count
             existing = Notification.objects.filter(report=report, sent_at__date=now.date())

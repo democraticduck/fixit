@@ -3,13 +3,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 from django.forms import ValidationError
 from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views import View
-from .forms import LoginForm, SignUpForm, ReportForm, ReportUpdateForm
-from .models import Notification, Report
+from .forms import LoginForm, SignUpForm, ReportForm, ReportUpdateForm, RegistrationForm
+from .models import Notification, Report, RegistrationRequest
 
 import shortuuid, os
 
@@ -210,19 +211,21 @@ class ReportDetail(View):
 
 def coordinator_signup(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data['ic_num']
-            password = form.cleaned_data['password1']
-
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            messages.success(request, ('Successfully registered!'))
+            data = form.cleaned_data
+            RegistrationRequest.objects.create(
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                ic_num=data['ic_num'],
+                phone_num=data['phone_num'],
+                email=data['email'],
+                password=make_password(data['password1']),
+            )
+            messages.success(request, "Registration submitted. Please wait for admin approval.")
             return redirect('/home')
     else:
-        form = SignUpForm()
-        form.fields['role'].initial = 'co'
+        form = RegistrationForm()
     return render(request, 'app/coordinator_signup.html', {'form': form})
 
 
