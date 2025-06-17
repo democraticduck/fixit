@@ -16,7 +16,7 @@ def notification_context(request):
         reminder_notifications = Notification.objects.filter(
             report__manage_by=user,
         ).filter(
-            Q(description__startswith="You") | Q(description__startswith="This")
+            Q(description__startswith="You h") | Q(description__startswith="This")
         )
 
         context['notifications'] = (

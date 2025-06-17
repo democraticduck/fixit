@@ -7,9 +7,20 @@
   position: relative;
   z-index: 1;
 }
+
+.white-box {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 960px;
+  margin: auto;
+}
 </style>
 
 <div class="container" style="z-index: 2;">
+  <div class="white-box">
   {% if report %}
     <div
       id="carouselExampleControls"
@@ -102,6 +113,7 @@
   {% else %}
     <h1>Invalid id</h1>
   {% endif %}
+  </div>
 </div>
 
 {% endblock %}
