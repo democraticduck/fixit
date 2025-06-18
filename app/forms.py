@@ -141,6 +141,21 @@ class ReportForm(forms.ModelForm):
         self.fields['title'].widget.attrs['placeholder'] = 'Title'
         self.fields['title'].help_text = ''
     
+class ReadOnlyReportForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ReportForm, self).__init__(*args, **kwargs)
+
+        for key in self.fields.keys():
+            self.fields[key].widget.attrs['class'] = 'form-control'
+            self.fields[key].widget.attrs['disabled'] = True
+            self.fields['work_id'].help_text = ''
+
+        self.fields['title'].widget = forms.TextInput()
+        self.fields['title'].widget.attrs['class'] = 'form-control'
+        self.fields['title'].widget.attrs['disabled'] = False
+        self.fields['title'].label = 'Title'
+        self.fields['title'].widget.attrs['placeholder'] = 'Title'
+        self.fields['title'].help_text = ''
 
 
 

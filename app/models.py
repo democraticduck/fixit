@@ -43,7 +43,7 @@ class BaseUser(AbstractUser):
         ACTIVE = 'ac', _('Active')
         BANNED = 'bn', _('Banned')
 
-    ic_num = models.CharField(max_length=12, null=True, blank=True, unique=True)
+    ic_num = models.CharField(max_length=12, null=True, blank=True, unique=True, primary_key=True)
     username = None  #Disable username
     
     phone_num = models.CharField(max_length=15, null=True, blank=True)
@@ -85,13 +85,11 @@ class STATES(models.TextChoices):
     LABUAN = 'Labuan', _('Labuan')
 
 
-class Coordinator(BaseUser):
+class Coordinator(models.Model):
+    base_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='coordinator_info')
     work_id = models.CharField(max_length = 255, blank=False)
     assigned_area = models.CharField(choices = STATES.choices)
 
-    def save(self, *args, **kwargs):
-        self.role = self.USER_ROLE.COORDINATOR
-        super().save(*args, **kwargs)
 
 
 #update photo url after adding to storage
@@ -120,7 +118,7 @@ class Report(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     photo_url = models.TextField(null=True, blank=True)
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='submitted_reports') #related name for related obj back to current
+    user_ic = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='submitted_reports') #related name for related obj back to current
 
     def __str__(self):
         return str(self.title)

@@ -12,13 +12,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.views.decorators.cache import never_cache
 from .forms import LoginForm, SignUpForm, ReportForm, ReportUpdateForm
-from .models import Report
+from .models import Report, BaseUser, ActiveReport
 
 import shortuuid
 
 USER_LOGIN_URL = 'login/'
-COORDINATOR_LOGIN_URL = 'coordinator/login/' 
 
+
+    
 @login_required(login_url=USER_LOGIN_URL)
 def home(request):
     assert isinstance(request, HttpRequest)
@@ -50,21 +51,6 @@ def about(request):
             'year':datetime.now().year,
         }
     )
-
-@login_required(login_url=USER_LOGIN_URL)
-def menu(request):
-    #if user
-    check_employee = request.user.groups.filter(name='employee').exists()
-
-    context = {
-            'title':'Main Menu',
-            'is_employee': check_employee,
-            'year':datetime.now().year,
-        }
-    context['user'] = request.user
-
-    return render(request,'app/menu.html',context)
-
 
 def handle_upload(f, dir_path, name):
     import pathlib
@@ -169,11 +155,21 @@ def signup(request): #signup as user
     return render(request, 'app/signup.html' ,{'form' : form})
 
 
+def report_list_fact(role):
+    from .models import BaseUser
 
-class Reportlist(View):
-    def get(self, request):
-        reports = request.user.submitted_reports.all()
+    @login_required(login_url=USER_LOGIN_URL)
+    def fc(request):
+        if role == BaseUser.Role.CUSTOMER:
+            reports = Report.object.filter(user_ic=request.user.ic_num)
+        elif role == BaseUser.Role.COORDINATOR:
+            reports = ActiveReport.object.filter(report.state = request.)
+        
         return render(request, "app/reportlist.html", {"reports": reports})
+    
+    return fc
+    
+
     
 
 class ReportDetail(View):
@@ -197,6 +193,9 @@ class ReportDetail(View):
             "Case Status": Report.CASE_STATUS(report['case_status']).label,
             "Progress Detail": report['progress_detail'],
         }})
+
+    #def post(self, request):
+
 
 """
 # remember old state
@@ -235,19 +234,20 @@ def coordinator_register(request):
     return render(request, 'app/coordinator_signup.html', {'form': form})
 
 
-@login_required(login_url = COORDINATOR_LOGIN_URL)
+@login_required(login_url = USER_LOGIN_URL)
 def coordinator_menu(request):
     return render(request,'app/coordinator_menu.html', {'user': request.user})
 
 
-@login_required(login_url = COORDINATOR_LOGIN_URL)
+@login_required(login_url = USER_LOGIN_URL)
 @never_cache
 def coordinator_reportlist(request):
     reports = request.user.managed_reports.all()
     return render(request, "app/coordinator_reportlist.html", {'reports': reports})
 
 
-@login_required(login_url = COORDINATOR_LOGIN_URL)
+
+@login_required(login_url = USER_LOGIN_URL)
 def coordinator_reportdetail(request):
     report_id = request.GET.get('id')
     report = get_object_or_404(Report, id=report_id, manage_by=request.user)
