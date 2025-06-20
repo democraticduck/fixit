@@ -5,6 +5,14 @@ from django.dispatch import receiver
 from django.utils import timezone
 from .models import Report, Notification
 
+def create_notification(report, title, description):
+    Notification.objects.create(
+        title=title,
+        description=description,
+        sent_at=timezone.now(),
+        report=report,
+    )
+
 # Store the old state of reports before saving
 @receiver(pre_save, sender=Report)
 def store_old_report_state(sender, instance, **kwargs):
@@ -28,27 +36,24 @@ def report_observer(sender, instance, created, **kwargs):
     # 1. Admin approves/rejects a report
     if old.approve_status != instance.approve_status:
         if instance.approve_status == 'ap':
-            Notification.objects.create(
-                title=f"Approved: {instance.title}",
-                description="Your report has been approved by the admin.",
-                sent_at=now,
-                report=instance,
+            create_notification(
+                instance,
+                f"Approved: {instance.title}",
+                "Your report has been approved by the admin."
             )
         elif instance.approve_status == 'rj':
-            Notification.objects.create(
-                title=f"Rejected: {instance.title}",
-                description="Your report has been rejected by the admin.",
-                sent_at=now,
-                report=instance,
+            create_notification(
+                instance,
+                f"Rejected: {instance.title}",
+                "Your report has been rejected by the admin."
             )
 
     # 2. Coordinator is assigned to the report
     if old.manage_by != instance.manage_by and instance.manage_by is not None:
-        Notification.objects.create(
-            title=f"New: {instance.title}",
-            description=f"You have been assigned to manage the case: \"{instance.title}\".",
-            sent_at=now,
-            report=instance,
+        create_notification(
+            instance,
+            f"New: {instance.title}",
+            f"You have been assigned to manage the case: \"{instance.title}\"."
         )
 
     # 3. Coordinator updates status or progress
@@ -56,9 +61,8 @@ def report_observer(sender, instance, created, **kwargs):
         old.manage_by == instance.manage_by and instance.manage_by is not None and
         (old.case_status != instance.case_status or old.progress_detail != instance.progress_detail)
     ):
-        Notification.objects.create(
-            title=f"Update: {instance.title}",
-            description="The status of your case has been updated. Please check the details.",
-            sent_at=now,
-            report=instance,
+        create_notification(
+            instance,
+            f"Update: {instance.title}",
+            "The status of your case has been updated. Please check the details."
         )
