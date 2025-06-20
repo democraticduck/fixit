@@ -48,14 +48,6 @@ class User(AbstractUser):
     objects = UserManager()  # <-- add this line
 
 
-class Admin(User):
-    work_id = models.CharField(max_length = 255, blank=False)
-
-
-class Coordinator(User):
-    work_id = models.CharField(max_length = 255, blank=False)
-
-
 class RegistrationRequest(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)

@@ -64,7 +64,7 @@ def handle_upload(f, dir_path, name):
         for chunk in f.chunks():
             destination.write(chunk)
     
-    print('success')
+    
 
 
 class ReportView(BaseView):
@@ -93,10 +93,10 @@ class ReportView(BaseView):
             obj.user_id = request.user
             obj.photo_url = dir_name #save as name of dir
             obj.save()
-            messages.success(request, ('Success!'))
+            messages.success(request, ('Report submitted!'))
             return redirect('/reportlist')
         else:
-            messages.success(request, ('Please fill in required fields'))
+            messages.error(request, ('Error in submitting'))
             return redirect('/report')
 
 """
@@ -153,7 +153,7 @@ class Login(BaseView):
             return(redirect('/home'))
         
         if not ic.isdigit() or password == '':
-            messages.info(request, ('Invalid field(s)')) #add to html
+            messages.error(request, ('Invalid field(s)')) #add to html
             return redirect('/login')       
 
         user = authenticate(request, username=ic, password=password)
@@ -163,7 +163,7 @@ class Login(BaseView):
             messages.success(request, ('Successfully login!'))
             return(redirect('/home'))
 
-        messages.success(request, ('Invalid ic or password'))
+        messages.error(request, ('Invalid ic or password'))
         return redirect('/login')
 
 """
@@ -386,7 +386,8 @@ class CoordinatorReportDetail(BaseView):
             form.save()
             messages.success(request, "Report updated.")
             return redirect('/coordinator/reportlist')
-
+            
+        messages.error(request, "Report not updated.")
         return render(request, self.template_name, context)
 
 """
