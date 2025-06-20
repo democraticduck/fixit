@@ -38,7 +38,7 @@ class USER_ROLE(models.TextChoices):
 
 
 class User(AbstractUser):
-    ic_num = models.CharField(max_length=12, null=True, blank=True, unique=True)
+    ic_num = models.CharField(max_length=12, unique=True, primary_key=True)
     phone_num = models.CharField(max_length=15, null=True, blank=True)
     role = models.CharField(choices = USER_ROLE.choices, default=USER_ROLE.CUSTOMER, max_length=2)
     username = None  # We disable username
@@ -49,6 +49,7 @@ class User(AbstractUser):
 
 
 class RegistrationRequest(models.Model):
+    id = models.UUIDField(primary_key=True, default = uuid.uuid4, editable = False)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
     ic_num = models.CharField(max_length=12, unique=True)
