@@ -245,12 +245,6 @@ def coordinator_reportdetail(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Report updated.")
-            Notification.objects.create(
-                title=f"Update: {report.title}",
-                description="The status of your report has been updated. Please check for details.",
-                sent_at=timezone.now(),
-                report=report
-            )
             return redirect('/coordinator/reportlist')
     else:
         form = ReportUpdateForm(instance=report)
