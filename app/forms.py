@@ -11,8 +11,26 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 
-class LoginForm(forms.ModelForm):
+from .validators import getValidator
+
+class BaseValidateMixin:
+    validate_fields = []
+    def clean(self):
+        cleaned_data = super().clean()
+        print(cleaned_data)
+        for key in self.validate_fields:
+            validator_cls = getValidator(key)
+            validator = validator_cls()
+            if not validator.validate(cleaned_data.get(key)):
+                raise ValidationError(f'error for key {key}')
+
+        return cleaned_data
+
+
+class LoginForm(BaseValidateMixin, forms.ModelForm):
     use_required_attribute = False
+    validate_fields = ['ic_num', 'password']
+
     def onlyInt(val):
         if not val.isdigit():
             raise ValidationError('ID contains characters')
@@ -38,11 +56,16 @@ class LoginForm(forms.ModelForm):
         self.fields['password'].widget.attrs['placeholder'] = 'Password'
         self.fields['password'].help_text = ''
 
-class SignUpForm(UserCreationForm):
+
+
+
+class SignUpForm(BaseValidateMixin, UserCreationForm):
     # email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Email Address"}))
     # first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "First Name"}))
     # last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Last Name"}))
     use_required_attribute = False
+    validate_fields = ['ic_num', 'password1', 'email', 'password2', 'phone_num']
+
     def onlyInt(val):
         if not val.isdigit():
             raise ValidationError('ID contains characters')
@@ -57,7 +80,7 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'ic_num', 'phone_num', 'email', 'password1', 'password2', 'role']
-
+    
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
 

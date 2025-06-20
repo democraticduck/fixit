@@ -2,24 +2,29 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid px-4">
     <a class="navbar-brand" href="{% url 'Home' %}">
-      <img src="{% static 'app/media/icon-11(no_bg).png' %}" alt="FixIt Logo">
+      <img src="{% static 'app/media/icon-11(no_bg).png' %}" alt="FixIt Logo" />
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a href="{% url 'about' %}" class="nav-link">About</a></li>
-        <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        <li class="nav-item">
+          <a href="{% url 'about' %}" class="nav-link">About</a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+        </li>
 
-        {% if user.is_authenticated %}
-          {% include 'app/authpartial.html' %}
-          {% include 'app/notification.html' %}
-          {% include 'app/logout.html' %}
-        {% else %}
-          {% include 'app/unauthpartial.html' %}
-        {% endif %}
+        {% if user.is_authenticated %} {% include 'app/authpartial.html' %} {%
+        include 'app/notification.html' %} {% include 'app/logout.html' %} {%
+        else %} {% include 'app/unauthpartial.html' %} {% endif %}
       </ul>
     </div>
   </div>

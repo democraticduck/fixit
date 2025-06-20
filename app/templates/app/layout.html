@@ -1,98 +1,98 @@
-{% load static %}
-{% load django_bootstrap5 %}
-<!DOCTYPE html>
+{% load static %} {% load django_bootstrap5 %}
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}FixIt{% endblock %}</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Inter&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    {% bootstrap_css %} {% bootstrap_javascript %}
 
-<head>
-  <meta charset="UTF-8">
-  <title>{% block title %}FixIt{% endblock %}</title>
-  <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'styles.css' %}">
-  {% bootstrap_css %}
-  {% bootstrap_javascript %}
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: "Inter", sans-serif;
+      }
 
-  <style>
-    body,
-    html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Inter', sans-serif;
-    }
+      .hero {
+        background: url("{% static 'app/media/node-2.png' %}") no-repeat center
+          center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        color: white;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 80px;
+        text-align: center;
+      }
 
-    .hero {
-      background: url("{% static 'app/media/node-2.png' %}") no-repeat center center fixed;
-      background-size: cover;
-      min-height: 100vh;
-      color: white;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-top: 80px;
-      text-align: center;
-    }
+      .hero-overlay {
+        position: fixed;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        pointer-events: none;
+      }
 
-    .hero-overlay {
-      position: fixed;
-      z-index: 0;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.3);
-      pointer-events: none;
-    }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        top: 50%;
+        transform: translateY(-50%);
+      }
 
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+      .hero-title {
+        font-size: 4rem;
+        font-weight: 700;
+      }
 
-    .hero-title {
-      font-size: 4rem;
-      font-weight: 700;
-    }
+      .hero-subtitle {
+        font-size: 1.5rem;
+        font-weight: 400;
+      }
 
-    .hero-subtitle {
-      font-size: 1.5rem;
-      font-weight: 400;
-    }
+      .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 10;
+        background: transparent !important;
+      }
 
-    .navbar {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 10;
-      background: transparent !important;
-    }
+      .navbar-nav .nav-link {
+        color: white !important;
+        font-weight: 500;
+        margin-right: 1rem;
+      }
 
-    .navbar-nav .nav-link {
-      color: white !important;
-      font-weight: 500;
-      margin-right: 1rem;
-    }
+      .navbar-brand img {
+        height: 40px;
+      }
 
-    .navbar-brand img {
-      height: 40px;
-    }
+      .modal {
+        z-index: 1050;
+      }
+    </style>
+  </head>
 
-    .modal {
-    z-index: 1050;
-  }
-  </style>
-</head>
-
-<body>
-  {% include 'app/navbar.html' %}
-  <div class="hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-content"></div>
-    {% block content %}{% endblock %}
-  </div>  
-</body>
-  
+  <body>
+    {% include 'app/navbar.html' %}
+    <div class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content"></div>
+      {% block content %}{% endblock %}
+    </div>
+  </body>
 </html>

@@ -1,7 +1,4 @@
-{% extends "app/layout.html" %}
-{% load django_bootstrap5 %}
-{% block title %}
-
+{% extends "app/layout.html" %} {% load django_bootstrap5 %} {% block title %}
 Signup {% endblock %} {% block content %}
 
 <style>
@@ -10,7 +7,6 @@ Signup {% endblock %} {% block content %}
     height: 100%;
     margin: 0;
   }
-
 
   .container {
     display: flex;
@@ -92,12 +88,13 @@ Signup {% endblock %} {% block content %}
         <div class="card">
           <h2>Sign Up</h2>
           <form method="POST" action="{% url 'signup' %}">
-            {% csrf_token %}
-            {% bootstrap_form form layout=layout size=size %}
+            {% csrf_token %} {% bootstrap_form form layout=layout size=size %}
             {% bootstrap_button button_type="submit" content="Sign Up" %}
           </form>
           <div class="mt-3 mb-3">
-            <a href="{% url 'coordinator_signup' %}">Register as Coordinator?</a>
+            <a href="{% url 'coordinator_signup' %}"
+              >Register as Coordinator?</a
+            >
           </div>
         </div>
       </main>

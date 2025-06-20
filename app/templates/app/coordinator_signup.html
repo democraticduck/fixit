@@ -1,7 +1,4 @@
-{% extends "app/layout.html" %}
-{% load django_bootstrap5 %}
-{% block title %}
-
+{% extends "app/layout.html" %} {% load django_bootstrap5 %} {% block title %}
 Coordinator Registration {% endblock %} {% block content %}
 
 <style>
@@ -41,7 +38,6 @@ Coordinator Registration {% endblock %} {% block content %}
     white-space: normal;
     max-width: 300px;
   }
-
 
   .container {
     display: flex;
@@ -92,11 +88,10 @@ Coordinator Registration {% endblock %} {% block content %}
         <div class="card">
           <h2>Coordinator Registration</h2>
           <form method="POST" action="{% url 'coordinator_signup' %}">
-            {% csrf_token %}
-            {% bootstrap_form form layout=layout size=size %}
+            {% csrf_token %} {% bootstrap_form form layout=layout size=size %}
             {% bootstrap_button button_type="submit" content="Register" %}
           </form>
-          <div style="height: 1rem;"></div>
+          <div style="height: 1rem"></div>
         </div>
       </main>
     </div>

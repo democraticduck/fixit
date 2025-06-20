@@ -58,18 +58,23 @@ Report an issue {% endblock %} {% block content %}
   <div class="bottom-wrapper">
     <div class="container">
       <div class="white-box">
-        <form method="POST" action="{% url 'report' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          {% bootstrap_form form layout=layout size=size %}
+        <form
+          method="POST"
+          action="{% url 'report' %}"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %} {% bootstrap_form form layout=layout size=size %}
 
-          <input type="hidden" name="loc_lat" id="loc_lat">
-          <input type="hidden" name="loc_lng" id="loc_lng">
+          <input type="hidden" name="loc_lat" id="loc_lat" />
+          <input type="hidden" name="loc_lng" id="loc_lng" />
 
-          <button type="button" class="btn btn-secondary" id="locBtn">Get Location</button>
-          <button class="btn btn-primary" type="submit" id="submitBtn" disabled>Submit</button>
+          <button type="button" class="btn btn-secondary" id="locBtn">
+            Get Location
+          </button>
+          <button class="btn btn-primary" type="submit" id="submitBtn" disabled>
+            Submit
+          </button>
         </form>
-
-
 
         <script>
           const btn = document.getElementById("locBtn");
@@ -78,7 +83,7 @@ Report an issue {% endblock %} {% block content %}
           const lng = document.getElementById("loc_lng");
 
           btn.addEventListener("click", function () {
-            btn.innerText = 'Loading...';
+            btn.innerText = "Loading...";
             navigator.geolocation.getCurrentPosition(success, error);
           });
 
@@ -88,15 +93,14 @@ Report an issue {% endblock %} {% block content %}
             lng.value = pos.coords.longitude;
             submitBtn.disabled = false;
             console.log(pos.coords.latitude, " ", pos.coords.longitude);
-            btn.innerText = 'Get location';
+            btn.innerText = "Get location";
           }
 
           function error() {
             alert("Sorry, no position available.");
-            btn.innerText = 'Get location';
+            btn.innerText = "Get location";
           }
         </script>
-
       </div>
     </div>
   </div>

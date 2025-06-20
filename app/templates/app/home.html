@@ -1,17 +1,11 @@
-{% extends 'app/layout.html' %}
+{% extends 'app/layout.html' %} {% block title %}Home - FixIt{% endblock %} {%
+block content %}
+<div class="hero-content">
+  <div class="hero-title">FixIt</div>
+  <div class="hero-subtitle">A place where your concerns matter.</div>
 
-{% block title %}Home - FixIt{% endblock %}
-
-{% block content %}
-  <div class="hero-content">
-    <div class="hero-title">FixIt</div>
-    <div class="hero-subtitle">A place where your concerns matter.</div>
-
-    {% if user.is_authenticated %}
-          <h1>Welcome {{ user.get_full_name }}</h1>
-    {% endif %}
-
-
-    
-  </div>
+  {% if user.is_authenticated %}
+  <h1>Welcome {{ user.get_full_name }}</h1>
+  {% endif %}
+</div>
 {% endblock %}

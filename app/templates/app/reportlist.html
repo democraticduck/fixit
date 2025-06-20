@@ -1,6 +1,4 @@
-{% extends "app/layout.html" %}
-{% load django_bootstrap5 %}
-{% block content %}
+{% extends "app/layout.html" %} {% load django_bootstrap5 %} {% block content %}
 
 <style>
   html,
@@ -81,8 +79,8 @@
 
 <div class="wrapper">
   <div class="bottom-wrapper">
-    <div class="container" style="z-index: 1; position: relative;">
-      <main class="center-box" style="z-index: 1; position: relative;">
+    <div class="container" style="z-index: 1; position: relative">
+      <main class="center-box" style="z-index: 1; position: relative">
         <h1 class="page-title">Report List</h1>
         <table class="table table-striped">
           <thead>
@@ -92,8 +90,7 @@
             </tr>
           </thead>
           <tbody>
-            {% if reports %}
-            {% for report in reports %}
+            {% if reports %} {% for report in reports %}
             <tr>
               <th scope="row">
                 <a href="{% url 'reportdetail' %}?id={{ report.id }}">
@@ -102,8 +99,7 @@
               </th>
               <td>{{ report.created_at }}</td>
             </tr>
-            {% endfor %}
-            {% else %}
+            {% endfor %} {% else %}
             <tr>
               <th scope="row">-</th>
               <td>-</td>

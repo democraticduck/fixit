@@ -1,6 +1,4 @@
-{% extends "app/layout.html" %}
-{% load django_bootstrap5 %}
-{% block content %}
+{% extends "app/layout.html" %} {% load django_bootstrap5 %} {% block content %}
 
 <style>
   .hero {
@@ -52,36 +50,65 @@
 
 <div class="wrapper">
   <div class="bottom-wrapper">
-    <div class="container" style="z-index: 2;">
+    <div class="container" style="z-index: 2">
       <div class="white-box">
         {% if report %}
-        <div id="carouselExampleControls" class="carousel" style="margin-bottom: 15px" data-bs-interval="false">
+        <div
+          id="carouselExampleControls"
+          class="carousel"
+          style="margin-bottom: 15px"
+          data-bs-interval="false"
+        >
           <div class="carousel-inner h-100">
             {% for image in img_path_list %}
             <a href="{{image}}">
               {% if forloop.first %}
               <div class="carousel-item active">
-                <img src="{{image}}" class="d-block img-fluid w-100"
-                  style="object-fit: contain; width: 300px; height: 500px" alt="..." />
+                <img
+                  src="{{image}}"
+                  class="d-block img-fluid w-100"
+                  style="object-fit: contain; width: 300px; height: 500px"
+                  alt="..."
+                />
               </div>
               {% else %}
               <div class="carousel-item">
-                <img src="{{image}}" class="d-block img-fluid w-100"
-                  style="object-fit: contain; width: 300px; height: 500px" alt="..." />
+                <img
+                  src="{{image}}"
+                  class="d-block img-fluid w-100"
+                  style="object-fit: contain; width: 300px; height: 500px"
+                  alt="..."
+                />
               </div>
               {% endif %}
             </a>
             {% endfor %}
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-              data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" style="filter: invert(100%)" aria-hidden="true"></span>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleControls"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                style="filter: invert(100%)"
+                aria-hidden="true"
+              ></span>
               <span class="visually-hidden">Previous</span>
             </button>
 
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-              data-bs-slide="next">
-              <span class="carousel-control-next-icon" style="filter: invert(100%)" aria-hidden="true"></span>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleControls"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                style="filter: invert(100%)"
+                aria-hidden="true"
+              ></span>
               <span class="visually-hidden">Next</span>
             </button>
           </div>
@@ -108,20 +135,18 @@
             </tbody>
           </table>
 
-          <a href="https://www.google.com/maps/search/?api=1&query={{ report.loc_lat }},{{ report.loc_lng }}"><button
-              class="btn btn-primary" action="">View on map</button></a>
+          <a
+            href="https://www.google.com/maps/search/?api=1&query={{ report.loc_lat }},{{ report.loc_lng }}"
+            ><button class="btn btn-primary" action="">View on map</button></a
+          >
 
-          <button type="submit" class="btn btn-warning">
-            Update Status
-          </button>
+          <button type="submit" class="btn btn-warning">Update Status</button>
 
           <a href="{% url 'coordinator_reportlist' %}">
-            <button class="btn btn-secondary">
-              Cancel
-            </button>
+            <button class="btn btn-secondary">Cancel</button>
           </a>
 
-          <div style="height: 1rem;"></div>
+          <div style="height: 1rem"></div>
         </form>
         {% else %}
         <h1>Invalid id</h1>
