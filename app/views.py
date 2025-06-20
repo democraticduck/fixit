@@ -1,25 +1,16 @@
-from datetime import datetime
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-
 from django.contrib.auth.hashers import make_password
-from django.forms import ValidationError
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
 from django.views import View
-from .forms import LoginForm, SignUpForm, ReportForm, ReportUpdateForm, RegistrationForm
-from .models import Notification, Report, RegistrationRequest
 
 import shortuuid, os
 
-
-from django.views import View
-from django.http import HttpResponse
-from django.shortcuts import render
-
-
+from .factories import FormFactory
+from .forms import LoginForm, SignUpForm, ReportForm, ReportUpdateForm, RegistrationForm
+from .models import Report, RegistrationRequest
 
 class BaseView(View):
     template_name = None
@@ -52,10 +43,8 @@ class BaseView(View):
         return self.get_render_to_response(context)
 
 
-
 class Home(BaseView):
     template_name = 'app/home.html'
-    
 
 
 class Contact(BaseView):
@@ -84,35 +73,31 @@ class ReportView(BaseView):
     def get_context_data(self, **kwargs):
         return {
             'title':'Report',
-            'form': ReportForm()
+            'form': FormFactory.create_form('report')
         }
 
     def post_render_to_response(self, context):
         request = self.request
-        if request.method == 'POST':
-            form = ReportForm(request.POST)
-            if form.is_valid():
-                dir_name = shortuuid.uuid() #generate uuid for folder in media
-                dir_path = str(settings.MEDIA_ROOT) + "/" + dir_name
+        form = FormFactory.create_form('report', request.POST)
 
-                for value in request:
-                    print(value)
+        if form.is_valid():
+            dir_name = shortuuid.uuid() #generate uuid for folder in media
+            dir_path = str(settings.MEDIA_ROOT) + "/" + dir_name
 
-                for idx, f in enumerate(request.FILES.getlist("photo")):
-                    handle_upload(f, dir_path, str(f.name))
+            for idx, f in enumerate(request.FILES.getlist("photo")):
+                handle_upload(f, dir_path, str(f.name))
 
-                obj = form.save(commit=False)
-                obj.loc_lat = request.POST.get('loc_lat')
-                obj.loc_lng = request.POST.get('loc_lng')
-                obj.user_id = request.user
-                obj.photo_url = dir_name #save as name of dir
-                obj.save()
-                messages.success(request, ('Success!'))
-                return redirect('/reportlist')
-            
-            else:
-                messages.success(request, ('Please fill in required fields'))
-                return redirect('/report')
+            obj = form.save(commit=False)
+            obj.loc_lat = request.POST.get('loc_lat')
+            obj.loc_lng = request.POST.get('loc_lng')
+            obj.user_id = request.user
+            obj.photo_url = dir_name #save as name of dir
+            obj.save()
+            messages.success(request, ('Success!'))
+            return redirect('/reportlist')
+        else:
+            messages.success(request, ('Please fill in required fields'))
+            return redirect('/report')
 
 """
 @login_required(login_url='/login')
@@ -151,22 +136,22 @@ def report(request):
         }
     )
 """
+
 class Login(BaseView):
     template_name = 'app/login.html'
     def get_context_data(self, **kwargs):
         return {
-            'form': LoginForm()
+            'form': FormFactory.create_form('login')
         }
+    
     def post_render_to_response(self, context):
         request = self.request
         ic = request.POST.get('ic_num')
         password = request.POST.get('password')
-        print(ic)
+
         if request.user.is_authenticated:
-            if request.user.role == 'cu':
-                return(redirect('/home'))
-            else:
-                return(redirect('/home'))
+            return(redirect('/home'))
+        
         if not ic.isdigit() or password == '':
             messages.info(request, ('Invalid field(s)')) #add to html
             return redirect('/login')       
@@ -176,10 +161,7 @@ class Login(BaseView):
         if user is not None:
             login(request, user)
             messages.success(request, ('Successfully login!'))
-            if request.user.role == 'cu':
-                return(redirect('/home'))
-            else:
-                return(redirect('/home'))
+            return(redirect('/home'))
 
         messages.success(request, ('Invalid ic or password'))
         return redirect('/login')
@@ -220,15 +202,19 @@ def login_user(request):
         }
     )
 """
+
 class Signup(BaseView):
     template_name = 'app/signup.html'
+
     def get_context_data(self, **kwargs):
         return {
-            'form': SignUpForm()
+            'form': FormFactory.create_form('signup')
         }
+    
     def post_render_to_response(self, context):
         request = self.request
-        form = SignUpForm(request.POST)
+        form = FormFactory.create_form('signup', request.POST)
+
         if form.is_valid():
             form.save()
             username = form.cleaned_data['ic_num']
@@ -238,6 +224,9 @@ class Signup(BaseView):
             login(request, user)
             messages.success(request, ('Successfully registered!'))
             return redirect('/home')
+        
+        context['form'] = form
+        return render(request, self.template_name, context)
 
 """
 def signup(request):
@@ -255,9 +244,7 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'app/signup.html' ,{'form' : form})
-
 """
-
 
 class Reportlist(BaseView):
     template_name = 'app/reportlist.html'
@@ -265,7 +252,6 @@ class Reportlist(BaseView):
         request = self.request
         reports = self.request.user.submitted_reports.all()
         return {"reports": reports}
-        
 
 
 class ReportDetail(BaseView):
@@ -293,17 +279,19 @@ class ReportDetail(BaseView):
             "Progress Detail": report['progress_detail'],
         }}
 
+
 class CoordinatorSignup(BaseView):
     template_name = 'app/coordinator_signup.html'
 
     def get_context_data(self, **kwargs):
         return {
-            'form': RegistrationForm()
+            'form': FormFactory.create_form('registration')
         }
 
     def post_render_to_response(self, context):
         request = self.request
-        form = RegistrationForm(request.POST)
+        form = FormFactory.create_form('registration', request.POST)
+
         if form.is_valid():
             data = form.cleaned_data
             RegistrationRequest.objects.create(
@@ -316,7 +304,6 @@ class CoordinatorSignup(BaseView):
             )
             messages.success(request, "Registration submitted. Please wait for admin approval.")
             return redirect('/home')
-
 
 """
 def coordinator_signup(request):
@@ -348,25 +335,28 @@ class CoordinatorReportList(BaseView):
         return {'reports': reports}
 
 """
-
 @login_required
 def coordinator_reportlist(request):
     reports = request.user.managed_reports.all()
     return render(request, "app/coordinator_reportlist.html", {'reports': reports})
-
 """
 
 class CoordinatorReportDetail(BaseView):
     template_name = 'app/coordinator_reportdetail.html'
 
-    def get_context_data(self, **kwargs):
-        request = self.request
+    def get_report_context(self, request, is_post=False):
         report_id = request.GET.get('id')
         report = get_object_or_404(Report, id=report_id, manage_by=request.user)
 
         img_path = os.path.join(settings.MEDIA_ROOT, report.photo_url)
         img_name = os.listdir(img_path) if os.path.exists(img_path) else []
         img_path_list = [settings.MEDIA_URL + report.photo_url + "/" + name for name in img_name]
+
+        form = FormFactory.create_form(
+            'report_update',
+            request.POST if is_post else None,
+            instance=report
+        )
 
         fields = {
             "ID": report.id,
@@ -376,11 +366,7 @@ class CoordinatorReportDetail(BaseView):
             "Created at": report.created_at,
             "Approve Status": Report.APPROVE_STATUS(report.approve_status).label,
         }
-        if request.method == 'POST':
-            form = ReportUpdateForm(request.POST, instance=report)
-        else:   
-            form = ReportUpdateForm(instance=report)
-        
+
         return {
             "report": report,
             "img_path_list": img_path_list,
@@ -388,22 +374,19 @@ class CoordinatorReportDetail(BaseView):
             "form": form,
         }
 
+    def get_context_data(self, **kwargs):
+        return self.get_report_context(self.request, is_post=False)
+
     def post_render_to_response(self, context):
         request = self.request
-        report = context['report']
-        form = context['form']
+        context = self.get_report_context(request, is_post=True)
+        form = context["form"]
 
         if form.is_valid():
             form.save()
             messages.success(request, "Report updated.")
-            Notification.objects.create(
-                title=f"Update: {report.title}",
-                description="The status of your report has been updated. Please check for details.",
-                sent_at=timezone.now(),
-                report=report
-            )
             return redirect('/coordinator/reportlist')
-        
+
         return render(request, self.template_name, context)
 
 """

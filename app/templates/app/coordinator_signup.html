@@ -86,7 +86,7 @@ Coordinator Registration {% endblock %} {% block content %}
     <div class="container">
       <main class="center-box">
         <div class="card">
-          <h2>Coordinator Registration</h2>
+          <h2><b>Coordinator Registration</b></h2>
           <form method="POST" action="{% url 'coordinator_signup' %}">
             {% csrf_token %} {% bootstrap_form form layout=layout size=size %}
             {% bootstrap_button button_type="submit" content="Register" %}
@@ -95,6 +95,8 @@ Coordinator Registration {% endblock %} {% block content %}
         </div>
       </main>
     </div>
+
+    <div style="height: 5rem"></div>
   </div>
 </div>
 {% endblock %}

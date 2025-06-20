@@ -1,16 +1,9 @@
-"""
-Definition of forms.
-"""
-
 from django import forms
-
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Report
-
-from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxLengthValidator
+from django.utils.translation import gettext_lazy as _
 
+from .models import User, Report
 from .validators import getValidator
 
 class BaseValidateMixin:
@@ -57,8 +50,6 @@ class LoginForm(BaseValidateMixin, forms.ModelForm):
         self.fields['password'].help_text = ''
 
 
-
-
 class SignUpForm(BaseValidateMixin, UserCreationForm):
     # email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Email Address"}))
     # first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "First Name"}))
@@ -75,7 +66,6 @@ class SignUpForm(BaseValidateMixin, UserCreationForm):
             raise ValidationError('Phone number contains characters')
         if len(val) != 10 or len(val) != 11:
             raise ValidationError('Phone number must be 10 digits')
-        
 
     class Meta:
         model = User
@@ -110,7 +100,6 @@ class SignUpForm(BaseValidateMixin, UserCreationForm):
         self.fields['phone_num'].widget.attrs['placeholder'] = 'Phone Number'
         self.fields['phone_num'].help_text = ''
         #self.fields['phone'].validators = [phoneValidator]
-        
 
         self.fields['password1'].widget.attrs['class'] = 'form-control'
         self.fields['password1'].label = 'Password'
@@ -197,22 +186,20 @@ class ReportForm(forms.ModelForm):
         self.fields['title'].widget.attrs['placeholder'] = 'Title'
         self.fields['title'].help_text = ''
     
-
         """
         self.fields['imgs'].widget = forms.ImageField()
         self.fields['imgs'].widget.attrs['class'] = 'form-control'
         self.fields['imgs'].label = 'Images'
         self.fields['imgs'].widget.attrs['placeholder'] = 'Images'
         self.fields['imgs'].help_text = ''
-        """
-    """
+
     title = forms.CharField(max_length=50, required=True)
     description = forms.CharField(max_length=500, required=False)
     category = forms.ChoiceField(choices=Report.CATEGORY.choices, required=True)
     loc_lng = forms.DecimalField(required=True)
     loc_lat = forms.DecimalField(required=True)
-    
     """
+
 
 class ReportUpdateForm(forms.ModelForm):
     class Meta:
